@@ -5,10 +5,10 @@
       "codigo": "ARQUIVO_INEXISTENTE",
       "feature": "fluxo-pedidos",
       "ref": "T-001",
-      "ocorrencias": 22,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-18T19:06:29.957Z",
-      "ultimaVez": "2026-08-18T19:11:48.410Z",
-      "gitRev": "649c876"
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
     },
     "ARQUIVO_INEXISTENTE::fluxo-pedidos::T-002": {
       "codigo": "ARQUIVO_INEXISTENTE",
@@ -32,10 +32,10 @@
       "codigo": "ARQUIVO_INEXISTENTE",
       "feature": "fluxo-pedidos",
       "ref": "T-004",
-      "ocorrencias": 21,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-18T19:06:29.958Z",
-      "ultimaVez": "2026-08-18T19:11:48.410Z",
-      "gitRev": "649c876"
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
     },
     "ARQUIVO_INEXISTENTE::fluxo-pedidos::T-005": {
       "codigo": "ARQUIVO_INEXISTENTE",
@@ -189,6 +189,303 @@
       "primeiraVez": "2026-08-18T19:11:48.410Z",
       "ultimaVez": "2026-08-18T19:11:48.410Z",
       "gitRev": "649c876"
+    },
+    "TASK_CONCLUIDA_SEM_PROVA::fluxo-pedidos::T-001": {
+      "codigo": "TASK_CONCLUIDA_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "T-001",
+      "ocorrencias": 6,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "TASK_CONCLUIDA_SEM_PROVA::fluxo-pedidos::T-002": {
+      "codigo": "TASK_CONCLUIDA_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "T-002",
+      "ocorrencias": 5,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "TASK_CONCLUIDA_SEM_PROVA::fluxo-pedidos::T-003": {
+      "codigo": "TASK_CONCLUIDA_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "T-003",
+      "ocorrencias": 8,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "TASK_CONCLUIDA_SEM_PROVA::fluxo-pedidos::T-004": {
+      "codigo": "TASK_CONCLUIDA_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "T-004",
+      "ocorrencias": 7,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "TASK_CONCLUIDA_SEM_PROVA::fluxo-pedidos::T-005": {
+      "codigo": "TASK_CONCLUIDA_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "T-005",
+      "ocorrencias": 6,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "TASK_CONCLUIDA_SEM_PROVA::fluxo-pedidos::T-006": {
+      "codigo": "TASK_CONCLUIDA_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "T-006",
+      "ocorrencias": 11,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "TASK_CONCLUIDA_SEM_PROVA::fluxo-pedidos::T-007": {
+      "codigo": "TASK_CONCLUIDA_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "T-007",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-001": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-001",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-002": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-002",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-003": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-003",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-004": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-004",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-005": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-005",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-006": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-006",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-007": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-007",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-008": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-008",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-009": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-009",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-010": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-010",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-011": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-011",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-012": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-012",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "AC_SEM_PROVA::fluxo-pedidos::AC-013": {
+      "codigo": "AC_SEM_PROVA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-013",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/__init__.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/__init__.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/adapter.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/adapter.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/consumer.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/consumer.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/handler.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/handler.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/outbox.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/outbox.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/persistence.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/persistence.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/__init__.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/order_service/order_service/__pycache__/__init__.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/api.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/order_service/order_service/__pycache__/api.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/main.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/order_service/order_service/__pycache__/main.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/models.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/order_service/order_service/__pycache__/models.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/outbox.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/order_service/order_service/__pycache__/outbox.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/persistence.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/order_service/order_service/__pycache__/persistence.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
+    },
+    "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/producer.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/order_service/order_service/__pycache__/producer.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:28:11.417Z",
+      "ultimaVez": "2026-08-18T19:28:11.417Z",
+      "gitRev": "6be5fec"
     }
   }
 }
