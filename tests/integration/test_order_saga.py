@@ -55,7 +55,13 @@ def test_valid_order_is_accepted_and_published_once_spec_ac_001():
     assert response.status_code == 202
     assert response.json()["status"] == "accepted"
     assert len(producer.messages) == 1
-    assert producer.messages[0][0] == "order.created"
+    topic, event = producer.messages[0]
+    assert topic == "orders.events"
+    assert event["event_type"] == "order.created"
+    assert event["event_version"] == 1
+    assert event["producer"] == "order-service"
+    assert event["order_id"] == response.json()["order_id"]
+    assert event["correlation_id"] == response.json()["correlation_id"]
 
 
 def test_stock_available_advances_to_payment_spec_ac_004():

@@ -3,17 +3,19 @@ set -euo pipefail
 
 bootstrap_server="${KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}"
 topics=(
-  order.created
-  inventory.reserved
-  inventory.rejected
-  inventory.release.requested
-  inventory.released
-  payment.approved
-  payment.failed
-  notification.sent
-  inventory.retry
-  payment.retry
-  notification.retry
+  orders.events
+  inventory.events
+  payments.events
+  notifications.events
+  inventory.retry.1
+  inventory.retry.2
+  inventory.retry.3
+  payment.retry.1
+  payment.retry.2
+  payment.retry.3
+  notification.retry.1
+  notification.retry.2
+  notification.retry.3
   inventory.dlq
   payment.dlq
   notification.dlq

@@ -6,11 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir \
-    fastapi \
-    "uvicorn[standard]" \
-    sqlalchemy \
-    "psycopg[binary]"
-
 COPY . /app
+
+RUN pip install --no-cache-dir .
 

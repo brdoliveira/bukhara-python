@@ -34,5 +34,14 @@ def test_pending_outbox_is_recovered_after_kafka_unavailability_spec_ac_013():
 
     recovered = InMemoryProducer()
     assert recover_pending_events(OutboxPublisher(store, recovered)) == 1
-    assert recovered.messages == [("order.created", {"event_id": order.event_id, "event_type": "order.created", "order_id": order.order_id, "correlation_id": order.correlation_id, "items": [{"product_id": "tea", "quantity": 1, "price": "10.00"}]})]
+    assert len(recovered.messages) == 1
+    topic, event = recovered.messages[0]
+    assert topic == "orders.events"
+    assert event["event_id"] == order.event_id
+    assert event["event_type"] == "order.created"
+    assert event["event_version"] == 1
+    assert event["producer"] == "order-service"
+    assert event["order_id"] == order.order_id
+    assert event["correlation_id"] == order.correlation_id
+    assert event["payload"]["items"] == [{"product_id": "tea", "quantity": 1, "price": "10.00"}]
     assert store.pending_events() == []
