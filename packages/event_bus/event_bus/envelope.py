@@ -71,7 +71,7 @@ class EventEnvelope:
                 raw_time = datetime.fromisoformat(raw_time.replace("Z", "+00:00"))
             except ValueError:
                 raw_time = None
-        return cls(event_id=value.get("event_id"), event_type=value.get("event_type"), event_version=value.get("event_version"), occurred_at=raw_time, producer=value.get("producer"), correlation_id=value.get("correlation_id"), causation_id=value.get("causation_id"), payload=value.get("payload"), retry_attempt=value.get("retry_attempt", 0))
+        return cls(event_id=value.get("event_id"), event_type=value.get("event_type", value.get("type")), event_version=value.get("event_version"), occurred_at=raw_time, producer=value.get("producer"), correlation_id=value.get("correlation_id"), causation_id=value.get("causation_id"), payload=value.get("payload"), retry_attempt=value.get("retry_attempt", 0))
 
     def for_retry(self, attempt: int) -> "EventEnvelope":
         return replace(self, retry_attempt=attempt)

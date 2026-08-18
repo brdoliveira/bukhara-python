@@ -23,6 +23,10 @@ def test_envelope_versionado_serializa_e_preserva_causacao() -> None:
     )
 
     assert EventEnvelope.from_dict(event.to_dict()) == event
+    legacy_event = event.to_dict()
+    legacy_event.pop("event_type")
+    legacy_event["type"] = "order.created"
+    assert EventEnvelope.from_dict(legacy_event) == event
 
 
 def test_evento_invalido_e_isolado_sem_impedir_proximo_evento__spec_AC_011() -> None:
