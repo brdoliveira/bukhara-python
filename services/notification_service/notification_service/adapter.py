@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, field
+import json
+import logging
 from typing import Any, Iterable
 
 
@@ -52,3 +54,20 @@ class NotificationAdapter:
 
     def fallback(self, order_id: str) -> None:
         self.fallbacks.append(order_id)
+
+
+class LoggingNotificationAdapter(NotificationAdapter):
+    """Adaptador de produção do MVP; emite notificações estruturadas no log."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._logger = logging.getLogger("notification-service")
+
+    def send_order_completed(self, *, order_id: str, correlation_id: str) -> None:
+        super().send_order_completed(order_id=order_id, correlation_id=correlation_id)
+        self._logger.info(json.dumps({
+            "event": "notification.sent",
+            "kind": "order_completed",
+            "order_id": order_id,
+            "correlation_id": correlation_id,
+        }))

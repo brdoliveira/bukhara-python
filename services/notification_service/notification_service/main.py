@@ -1,10 +1,19 @@
-"""Pontos de saúde e prontidão do serviço de notificação."""
+"""Aplicação FastAPI e lifecycle do notification-service."""
 
 from __future__ import annotations
 
-import json
+from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from typing import Any, Awaitable, Callable
+import os
+from typing import Callable
+
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+
+from .adapter import LoggingNotificationAdapter
+from .consumer import KafkaNotificationWorker
+from .handler import NotificationHandler
+from .persistence import NotificationRepository, PostgresNotificationRepository
 
 
 @dataclass
@@ -15,30 +24,62 @@ class DependencyProbe:
         return self.available
 
 
-class NotificationApplication:
-    def __init__(self, kafka: DependencyProbe, postgres: DependencyProbe) -> None:
-        self.kafka = kafka
-        self.postgres = postgres
+class CallableProbe:
+    def __init__(self, check: Callable[[], bool]) -> None:
+        self.check = check
 
-    async def __call__(self, scope: dict[str, Any], receive: Callable[[], Awaitable[dict[str, Any]]],
-                       send: Callable[[dict[str, Any]], Awaitable[None]]) -> None:
-        if scope.get("type") != "http":
-            return
-        if scope.get("path") == "/health":
-            status, body = 200, {"status": "alive"}
-        elif scope.get("path") == "/ready":
-            kafka = "available" if self.kafka.is_available() else "unavailable"
-            postgres = "available" if self.postgres.is_available() else "unavailable"
-            status = 200 if kafka == postgres == "available" else 503
-            body = {"status": "ready" if status == 200 else "not_ready", "kafka": kafka, "postgres": postgres}
-        else:
-            status, body = 404, {"detail": "not found"}
-        await send({"type": "http.response.start", "status": status, "headers": [(b"content-type", b"application/json")]})
-        await send({"type": "http.response.body", "body": json.dumps(body).encode("utf-8")})
+    def is_available(self) -> bool:
+        try:
+            return bool(self.check())
+        except Exception:
+            return False
 
 
-def create_app(kafka: DependencyProbe | None = None, postgres: DependencyProbe | None = None) -> NotificationApplication:
-    return NotificationApplication(kafka or DependencyProbe(), postgres or DependencyProbe())
+def create_app(
+    kafka: DependencyProbe | CallableProbe | None = None,
+    postgres: DependencyProbe | CallableProbe | None = None,
+    worker: KafkaNotificationWorker | None = None,
+) -> FastAPI:
+    database_url = os.getenv("DATABASE_URL")
+    repository = PostgresNotificationRepository(database_url) if database_url else NotificationRepository()
+    runtime_worker = worker
+    if runtime_worker is None and os.getenv("KAFKA_BOOTSTRAP_SERVERS"):
+        runtime_worker = KafkaNotificationWorker(
+            os.environ["KAFKA_BOOTSTRAP_SERVERS"],
+            NotificationHandler(LoggingNotificationAdapter(), repository),
+            repository,
+        )
+
+    @asynccontextmanager
+    async def lifespan(_: FastAPI):
+        if runtime_worker:
+            await runtime_worker.start()
+        try:
+            yield
+        finally:
+            if runtime_worker:
+                await runtime_worker.stop()
+
+    app = FastAPI(title="notification-service", lifespan=lifespan)
+    kafka_probe = kafka or CallableProbe(lambda: bool(runtime_worker and runtime_worker.ready))
+    postgres_probe = postgres or CallableProbe(repository.is_available)
+
+    @app.get("/health")
+    async def health() -> dict[str, str]:
+        return {"status": "alive"}
+
+    @app.get("/ready")
+    async def ready():
+        kafka_state = "available" if kafka_probe.is_available() else "unavailable"
+        postgres_state = "available" if postgres_probe.is_available() else "unavailable"
+        body = {
+            "status": "ready" if kafka_state == postgres_state == "available" else "not_ready",
+            "kafka": kafka_state,
+            "postgres": postgres_state,
+        }
+        return JSONResponse(body, status_code=200 if body["status"] == "ready" else 503)
+
+    return app
 
 
 app = create_app()

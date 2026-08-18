@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass
+import asyncio
+import json
 from typing import Any
 
 from .adapter import InMemoryBroker, TransientDependencyError
@@ -93,3 +95,100 @@ class NotificationConsumer:
         except (TypeError, ValueError):
             errors.append("retry_attempt must be an integer")
         return errors
+
+
+class KafkaNotificationWorker:
+    """Liga o consumidor de domínio ao Kafka real sem contaminar os testes."""
+
+    def __init__(self, bootstrap_servers: str, handler: NotificationHandler, repository: NotificationRepository) -> None:
+        self.bootstrap_servers = bootstrap_servers
+        self.handler = handler
+        self.repository = repository
+        self.producer: Any = None
+        self.consumer: Any = None
+        self.task: asyncio.Task | None = None
+        self.ready = False
+
+    async def start(self) -> None:
+        try:
+            from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
+        except ImportError as error:  # pragma: no cover - protegido no build da imagem
+            raise RuntimeError("aiokafka is required for the production worker") from error
+        self.producer = AIOKafkaProducer(
+            bootstrap_servers=self.bootstrap_servers,
+            value_serializer=lambda value: json.dumps(value).encode("utf-8"),
+        )
+        self.consumer = AIOKafkaConsumer(
+            "payments.events",
+            "notification.retry.1",
+            "notification.retry.2",
+            "notification.retry.3",
+            bootstrap_servers=self.bootstrap_servers,
+            group_id="notification-service-v1",
+            enable_auto_commit=False,
+            auto_offset_reset="earliest",
+            value_deserializer=lambda value: json.loads(value.decode("utf-8")),
+        )
+        await self.producer.start()
+        await self.consumer.start()
+        self.ready = True
+        self.task = asyncio.create_task(self._run(), name="notification-kafka-consumer")
+
+    async def stop(self) -> None:
+        self.ready = False
+        if self.task:
+            self.task.cancel()
+            try:
+                await self.task
+            except asyncio.CancelledError:
+                pass
+        if self.consumer:
+            await self.consumer.stop()
+        if self.producer:
+            await self.producer.stop()
+
+    async def _run(self) -> None:
+        async for message in self.consumer:
+            event = self.normalize_event(message.value)
+            if event.get("type") != "payment.approved":
+                await self.consumer.commit()
+                continue
+            broker = InMemoryBroker()
+            result = NotificationConsumer(self.handler, self.repository, broker).consume(event)
+            for retry in broker.retries:
+                await asyncio.sleep(retry["delay_seconds"])
+                attempt = int(retry["event"]["retry_attempt"])
+                await self._publish(f"notification.retry.{attempt}", retry["event"])
+            for dead_letter in broker.dlq:
+                await self._publish("notification.dlq", {
+                    **dead_letter,
+                    "event": self.to_envelope(dead_letter["event"]),
+                })
+            if result.status == "processed":
+                await self._publish("notifications.events", self.to_envelope({
+                    **event,
+                    "event_id": f"notification-{event['event_id']}",
+                    "type": "notification.sent",
+                    "payload": {"kind": "order_completed"},
+                    "causation_id": event["event_id"],
+                }))
+            await self.consumer.commit()
+
+    async def _publish(self, topic: str, event: dict[str, Any]) -> None:
+        await self.producer.send_and_wait(topic, event, key=event.get("order_id", "").encode("utf-8"))
+
+    @staticmethod
+    def normalize_event(event: dict[str, Any]) -> dict[str, Any]:
+        normalized = dict(event)
+        normalized["type"] = normalized.get("type") or normalized.get("event_type")
+        normalized.setdefault("payload", {})
+        return normalized
+
+    @staticmethod
+    def to_envelope(event: dict[str, Any]) -> dict[str, Any]:
+        envelope = dict(event)
+        event_type = envelope.pop("type", envelope.get("event_type"))
+        envelope["event_type"] = event_type
+        envelope.setdefault("event_version", 1)
+        envelope.setdefault("producer", SERVICE_NAME)
+        return envelope
