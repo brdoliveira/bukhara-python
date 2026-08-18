@@ -16,6 +16,7 @@ from .persistence import NotificationRepository
 MAX_RETRIES = 3
 SERVICE_NAME = "notification-service"
 SUPPORTED_EVENT_TYPES = {"payment.approved"}
+PRODUCTION_RETRY_DELAYS = (1, 5, 15)
 
 
 @dataclass(frozen=True)
@@ -156,8 +157,8 @@ class KafkaNotificationWorker:
             broker = InMemoryBroker()
             result = NotificationConsumer(self.handler, self.repository, broker).consume(event)
             for retry in broker.retries:
-                await asyncio.sleep(retry["delay_seconds"])
                 attempt = int(retry["event"]["retry_attempt"])
+                await asyncio.sleep(PRODUCTION_RETRY_DELAYS[attempt - 1])
                 await self._publish(f"notification.retry.{attempt}", retry["event"])
             for dead_letter in broker.dlq:
                 await self._publish("notification.dlq", {
