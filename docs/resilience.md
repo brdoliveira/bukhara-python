@@ -2,12 +2,12 @@
 
 ## Retry e DLQ (AC-008, AC-009)
 
-Falhas transitórias são reagendadas no máximo três vezes, com atraso exponencial de `1s`, `2s` e `4s`. A mensagem mantém `event_id`, `correlation_id` e registra a tentativa em `retry_attempt`.
+Falhas transitórias são reagendadas no máximo três vezes, com atrasos de `1s`, `5s` e `15s`, nos tópicos `<serviço>.retry.1`, `.2` e `.3`. A mensagem preserva `event_id` e `correlation_id` e registra a tentativa em `retry_attempt`.
 
 Quando a terceira tentativa falha, o consumidor executa o fallback seguro uma única vez e envia a mensagem à DLQ do serviço. A entrada registra tipo do erro, serviço de origem e total de tentativas. Entregas posteriores são confirmadas sem repetir o fallback.
 
 ```bash
-pytest -q tests/integration/test_retry_and_dlq.py
+py -3.12 -B -m pytest tests/integration/test_retry_and_dlq.py -q -p no:cacheprovider
 docker compose logs --since=10m inventory-service payment-service notification-service
 ```
 
@@ -22,10 +22,12 @@ curl -i http://localhost:8000/health
 curl -i http://localhost:8000/ready
 curl -i http://localhost:8001/health
 curl -i http://localhost:8001/ready
+curl -i http://localhost:8002/ready
+curl -i http://localhost:8003/ready
 ```
 
-Kafka e PostgreSQL possuem healthchecks no Compose. Em caso de falha, examine `docker compose ps` e os logs antes de reenviar pedidos.
+Kafka e PostgreSQL têm healthchecks no Compose. Em caso de falha, examine `docker compose ps` e os logs antes de reenviar pedidos.
 
 ## Limites do MVP
 
-O fluxo oferece processamento efetivamente uma vez por idempotência local, não garantia global de exatamente uma vez. Integrações externas são adaptadores simulados; Kubernetes, autenticação e observabilidade distribuída estão fora do escopo.
+O fluxo oferece processamento efetivamente uma vez por Inbox/Outbox e idempotência, não uma garantia global de exatamente uma vez. Estoque, adquirente e entrega de notificação são adaptadores simulados; Kafka e PostgreSQL são integrações reais. Kubernetes, autenticação e observabilidade distribuída estão fora do escopo.
