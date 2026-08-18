@@ -3,5 +3,4 @@
 revision = "001_initial"
 down_revision = None
 
-TABLES = ("payment_inbox", "payment_charges", "payment_outbox")
-
+TABLES = ("payment_inbox", "payment_effects", "payment_outbox")

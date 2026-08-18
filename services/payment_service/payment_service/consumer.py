@@ -28,6 +28,7 @@ class PaymentConsumer:
         self.broker = broker
 
     def consume(self, event: dict[str, Any]) -> ConsumerResult:
+        event = self._normalize(event)
         errors = self._validate(event)
         event_id = event.get("event_id") if isinstance(event, dict) else None
         if errors:
@@ -112,3 +113,14 @@ class PaymentConsumer:
             errors.append("retry_attempt must be an integer")
         return errors
 
+    @staticmethod
+    def _normalize(event: Any) -> Any:
+        """Aceita o contrato Kafka (`event_type`) sem quebrar os testes legados."""
+        if not isinstance(event, dict):
+            return event
+        normalized = deepcopy(event)
+        if "type" not in normalized and isinstance(normalized.get("event_type"), str):
+            normalized["type"] = normalized["event_type"]
+        if "event_type" not in normalized and isinstance(normalized.get("type"), str):
+            normalized["event_type"] = normalized["type"]
+        return normalized

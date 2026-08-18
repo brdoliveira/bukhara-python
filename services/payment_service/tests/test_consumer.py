@@ -73,6 +73,18 @@ def test_ac_010_evento_duplicado_confirma_sem_repetir_cobranca_ou_publicacao__sp
     assert broker.acknowledged == ["evt-1", "evt-1"]
 
 
+@pytest.mark.parametrize("_spec_tag", ["@spec:AC-006"], ids=str)
+def test_ac_006_envelope_com_event_type_e_normalizado_sem_perder_compatibilidade__spec_AC_006(_spec_tag):
+    service, _, _, broker = consumer()
+    message = event()
+    message["event_type"] = message.pop("type")
+
+    assert service.consume(message).status == "processed"
+    assert broker.published[0]["type"] == "payment.approved"
+    assert broker.published[0]["event_type"] == "payment.approved"
+    assert broker.published[0]["causation_id"] == "evt-1"
+
+
 @pytest.mark.parametrize("_spec_tag", ["@spec:AC-011"], ids=str)
 def test_ac_011_evento_invalido_e_isolado_na_dlq_sem_deter_consumidor__spec_AC_011(_spec_tag):
     service, _, adapter, broker = consumer()
@@ -82,4 +94,3 @@ def test_ac_011_evento_invalido_e_isolado_na_dlq_sem_deter_consumidor__spec_AC_0
 
     assert broker.dlq[0]["validation_errors"]
     assert len(adapter.charges) == 1
-

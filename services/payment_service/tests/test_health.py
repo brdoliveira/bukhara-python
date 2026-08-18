@@ -15,7 +15,21 @@ async def request(app, path):
     async def send(message):
         messages.append(message)
 
-    await app({"type": "http", "path": path}, receive, send)
+    await app(
+        {
+            "type": "http",
+            "method": "GET",
+            "path": path,
+            "raw_path": path.encode("utf-8"),
+            "query_string": b"",
+            "headers": [],
+            "client": ("testclient", 50000),
+            "server": ("testserver", 80),
+            "scheme": "http",
+        },
+        receive,
+        send,
+    )
     return messages[0]["status"], json.loads(messages[1]["body"])
 
 

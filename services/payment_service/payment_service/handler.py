@@ -28,6 +28,7 @@ class PaymentHandler:
                 order_id=event["order_id"],
                 correlation_id=event["correlation_id"],
                 payload={},
+                causation_id=event["event_id"],
             )
         ]
 
@@ -37,9 +38,12 @@ class PaymentHandler:
         return self._failure_events(event, reason="payment_unavailable")
 
     def _failure_events(self, event: dict[str, Any], *, reason: str) -> list[dict[str, Any]]:
-        common = {"order_id": event["order_id"], "correlation_id": event["correlation_id"]}
+        common = {
+            "order_id": event["order_id"],
+            "correlation_id": event["correlation_id"],
+            "causation_id": event["event_id"],
+        }
         return [
             self.outbox.add("payment.failed", payload={"reason": reason}, **common),
             self.outbox.add("inventory.release.requested", payload={"reason": reason}, **common),
         ]
-
