@@ -24,6 +24,7 @@ from .persistence import PostgresPaymentRepository
 INVENTORY_TOPIC = "inventory.events"
 PAYMENTS_TOPIC = "payments.events"
 RETRY_TOPICS = ("payment.retry.1", "payment.retry.2", "payment.retry.3")
+RETRY_DELAYS = (1, 5, 15)
 DLQ_TOPIC = "payment.dlq"
 
 
@@ -171,7 +172,7 @@ class PaymentRuntime:
                 self.outbox.enqueue,
                 retry,
                 topic=RETRY_TOPICS[attempt],
-                available_at=datetime.now(timezone.utc) + timedelta(seconds=2**attempt),
+                available_at=datetime.now(timezone.utc) + timedelta(seconds=RETRY_DELAYS[attempt]),
             )
             return
 
