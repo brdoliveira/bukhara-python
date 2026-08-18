@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "order-saga"
+version = "0.1.0"
+description = "Event contracts and resilience primitives for the order saga"
+requires-python = ">=3.9"
+dependencies = [
+    "aiokafka>=0.10,<1",
+    "fastapi>=0.110,<1",
+    "psycopg[binary]>=3.1,<4",
+    "uvicorn[standard]>=0.27,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9"]
+
+[tool.pytest.ini_options]
+pythonpath = ["packages/event_bus"]
+addopts = "-ra --import-mode=importlib"
+
+[tool.setuptools]
+package-dir = {"" = "packages/event_bus"}
+
+[tool.setuptools.packages.find]
+where = ["packages/event_bus"]
