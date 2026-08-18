@@ -6,9 +6,10 @@ SQLite é usado nos testes; a mesma camada usa uma URL PostgreSQL em produção.
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from typing import Any
+from typing import Any, Optional
 
 from sqlalchemy import Boolean, Column, DateTime, MetaData, String, Table, Text, create_engine, select
 from sqlalchemy.engine import Engine
@@ -53,19 +54,27 @@ class OutboxEvent:
     correlation_id: str
     topic: str
     payload: dict[str, Any]
+    created_at: datetime
 
     def message(self) -> dict[str, Any]:
         return {
             "event_id": self.event_id,
             "event_type": "order.created",
+            "type": "order.created",
+            "event_version": 1,
+            "occurred_at": self.created_at.isoformat(),
+            "producer": "order-service",
+            "causation_id": None,
             "order_id": self.order_id,
             "correlation_id": self.correlation_id,
+            "payload": {"order_id": self.order_id, **self.payload},
             **self.payload,
         }
 
 
 class OrderStore:
-    def __init__(self, database_url: str = "sqlite+pysqlite:///:memory:") -> None:
+    def __init__(self, database_url: Optional[str] = None) -> None:
+        database_url = database_url or os.getenv("DATABASE_URL", "sqlite+pysqlite:///:memory:")
         options: dict[str, Any] = {"future": True}
         # TestClient atende endpoints em outra thread. StaticPool faz o banco
         # SQLite em memória permanecer o mesmo sem afetar URLs PostgreSQL.
@@ -73,6 +82,13 @@ class OrderStore:
             options.update(connect_args={"check_same_thread": False}, poolclass=StaticPool)
         self.engine: Engine = create_engine(database_url, **options)
         metadata.create_all(self.engine)
+
+    @classmethod
+    def from_environment(cls) -> "OrderStore":
+        database_url = os.getenv("DATABASE_URL")
+        if not database_url:
+            raise RuntimeError("DATABASE_URL is required for the order-service runtime")
+        return cls(database_url)
 
     def create_order_with_outbox(self, order: StoredOrder, idempotency_key: str) -> tuple[StoredOrder, bool]:
         """Cria pedido e evento na mesma transação; uma chave só pode criar uma vez."""
@@ -86,7 +102,7 @@ class OrderStore:
                 ))
                 connection.execute(outbox.insert().values(
                     event_id=order.event_id, order_id=order.order_id,
-                    correlation_id=order.correlation_id, topic="order.created",
+                    correlation_id=order.correlation_id, topic="orders.events",
                     payload=serialized, published=False, created_at=now,
                 ))
             return order, True
@@ -101,7 +117,7 @@ class OrderStore:
     def pending_events(self) -> list[OutboxEvent]:
         with self.engine.connect() as connection:
             rows = connection.execute(select(outbox).where(outbox.c.published.is_(False)).order_by(outbox.c.created_at)).mappings()
-            return [OutboxEvent(r["event_id"], r["order_id"], r["correlation_id"], r["topic"], json.loads(r["payload"])) for r in rows]
+            return [OutboxEvent(r["event_id"], r["order_id"], r["correlation_id"], r["topic"], json.loads(r["payload"]), r["created_at"]) for r in rows]
 
     def mark_published(self, event_id: str) -> None:
         with self.engine.begin() as connection:
@@ -114,3 +130,6 @@ class OrderStore:
             return True
         except Exception:
             return False
+
+    def close(self) -> None:
+        self.engine.dispose()

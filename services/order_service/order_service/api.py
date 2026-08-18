@@ -11,11 +11,11 @@ from .producer import EventProducer, OutboxPublisher
 from .persistence import OrderStore, StoredOrder
 
 
-def register_routes(app: FastAPI, store: OrderStore, producer: EventProducer) -> None:
+def register_routes(app: FastAPI, store: OrderStore, producer: EventProducer) -> OutboxPublisher:
     publisher = OutboxPublisher(store, producer)
 
     @app.post("/orders", response_model=OrderAccepted, status_code=status.HTTP_202_ACCEPTED)
-    def create_order(request: CreateOrderRequest, idempotency_key: str = Header(..., alias="Idempotency-Key")) -> OrderAccepted:
+    async def create_order(request: CreateOrderRequest, idempotency_key: str = Header(..., alias="Idempotency-Key")) -> OrderAccepted:
         candidate = StoredOrder(
             order_id=str(uuid4()), correlation_id=str(uuid4()), payload=order_payload(request.items), event_id=str(uuid4()),
         )
@@ -25,7 +25,7 @@ def register_routes(app: FastAPI, store: OrderStore, producer: EventProducer) ->
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
         if created:
             try:
-                publisher.publish_pending()
+                await publisher.publish_pending_async()
             except ConnectionError:
                 # A transação já confirmou. O recuperador publicará depois.
                 pass
@@ -41,3 +41,5 @@ def register_routes(app: FastAPI, store: OrderStore, producer: EventProducer) ->
             return {"status": "ready"}
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
         return {"status": "not_ready"}
+
+    return publisher

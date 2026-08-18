@@ -27,10 +27,14 @@ def test_post_valid_order_is_accepted_and_published_once_spec_ac_001():
     assert body["order_id"] and body["correlation_id"]
     assert len(producer.messages) == 1
     topic, event = producer.messages[0]
-    assert topic == "order.created"
+    assert topic == "orders.events"
+    assert event["event_type"] == event["type"] == "order.created"
+    assert event["event_version"] == 1
+    assert event["producer"] == "order-service"
     assert event["order_id"] == body["order_id"]
     assert event["correlation_id"] == body["correlation_id"]
     assert event["items"] == [{"product_id": "book", "quantity": 2, "price": "12.50"}]
+    assert event["payload"] == {"order_id": body["order_id"], "items": event["items"]}
 
 
 def test_resubmitting_same_key_does_not_duplicate_order_or_event_spec_ac_002():
