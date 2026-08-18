@@ -374,118 +374,604 @@
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/inventory_service/inventory_service/__pycache__/__init__.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/adapter.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/inventory_service/inventory_service/__pycache__/adapter.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/consumer.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/inventory_service/inventory_service/__pycache__/consumer.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/handler.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/inventory_service/inventory_service/__pycache__/handler.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/outbox.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/inventory_service/inventory_service/__pycache__/outbox.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/persistence.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/inventory_service/inventory_service/__pycache__/persistence.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/__init__.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/order_service/order_service/__pycache__/__init__.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/api.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/order_service/order_service/__pycache__/api.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/main.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/order_service/order_service/__pycache__/main.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/models.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/order_service/order_service/__pycache__/models.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/outbox.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/order_service/order_service/__pycache__/outbox.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/persistence.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/order_service/order_service/__pycache__/persistence.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
     },
     "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/producer.cpython-312.pyc": {
       "codigo": "ARQUIVO_ORFAO",
       "feature": "—",
       "ref": "services/order_service/order_service/__pycache__/producer.cpython-312.pyc",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-08-18T19:28:11.417Z",
-      "ultimaVez": "2026-08-18T19:28:11.417Z",
-      "gitRev": "6be5fec"
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-001": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-001",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.426Z",
+      "ultimaVez": "2026-08-18T22:26:43.615Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-002": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-002",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.616Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-003": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-003",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.616Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-004": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-004",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.616Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-005": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-005",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.616Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-006": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-006",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.616Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-007": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-007",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.616Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-008": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-008",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.616Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-009": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-009",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.616Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-010": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-010",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.617Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-011": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-011",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.617Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-012": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-012",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.617Z",
+      "gitRev": "c126792"
+    },
+    "PROVA_FRACA::fluxo-pedidos::AC-013": {
+      "codigo": "PROVA_FRACA",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-013",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T22:26:43.617Z",
+      "gitRev": "c126792"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/__init__.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/__init__.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/__init__.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/__init__.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/envelope.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/envelope.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/envelope.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/envelope.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/health.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/health.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/health.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/health.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/inbox.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/inbox.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/inbox.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/inbox.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/outbox.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/outbox.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/outbox.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/outbox.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/retry.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/retry.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::packages/event_bus/event_bus/__pycache__/retry.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "packages/event_bus/event_bus/__pycache__/retry.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/__init__.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/__init__.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/adapter.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/adapter.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/consumer.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/consumer.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/handler.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/handler.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/main.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/main.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/outbox.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/outbox.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/inventory_service/inventory_service/__pycache__/persistence.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/inventory_service/inventory_service/__pycache__/persistence.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/notification_service/notification_service/__pycache__/__init__.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/notification_service/notification_service/__pycache__/__init__.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/notification_service/notification_service/__pycache__/adapter.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/notification_service/notification_service/__pycache__/adapter.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/notification_service/notification_service/__pycache__/consumer.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/notification_service/notification_service/__pycache__/consumer.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/notification_service/notification_service/__pycache__/handler.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/notification_service/notification_service/__pycache__/handler.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.427Z",
+      "ultimaVez": "2026-08-18T19:50:55.427Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/notification_service/notification_service/__pycache__/main.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/notification_service/notification_service/__pycache__/main.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/notification_service/notification_service/__pycache__/persistence.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/notification_service/notification_service/__pycache__/persistence.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/__init__.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/order_service/order_service/__pycache__/__init__.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/order_service/order_service/__pycache__/main.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/order_service/order_service/__pycache__/main.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/__init__.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/__init__.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/__init__.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/__init__.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/adapter.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/adapter.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/adapter.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/adapter.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/consumer.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/consumer.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/consumer.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/consumer.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/handler.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/handler.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/handler.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/handler.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/main.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/main.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/main.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/main.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/outbox.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/outbox.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/outbox.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/outbox.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/persistence.cpython-312.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/persistence.cpython-312.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
+    },
+    "ARQUIVO_ORFAO::—::services/payment_service/payment_service/__pycache__/persistence.cpython-39.pyc": {
+      "codigo": "ARQUIVO_ORFAO",
+      "feature": "—",
+      "ref": "services/payment_service/payment_service/__pycache__/persistence.cpython-39.pyc",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:50:55.428Z",
+      "ultimaVez": "2026-08-18T19:50:55.428Z",
+      "gitRev": "f064619"
     }
   }
 }

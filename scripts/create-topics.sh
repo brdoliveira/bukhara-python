@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-bootstrap_server="${KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}"
+bootstrap_server="${KAFKA_BOOTSTRAP_SERVERS:-kafka:19092}"
 topics=(
   orders.events
   inventory.events
@@ -22,7 +22,7 @@ topics=(
 )
 
 for topic in "${topics[@]}"; do
-  /opt/bitnami/kafka/bin/kafka-topics.sh \
+  /opt/kafka/bin/kafka-topics.sh \
     --bootstrap-server "$bootstrap_server" \
     --create --if-not-exists --topic "$topic" --partitions 1 --replication-factor 1
 done

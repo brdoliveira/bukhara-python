@@ -41,6 +41,18 @@ def test_ac_004_estoque_disponivel_publica_reserva_com_identificadores__spec_AC_
     assert len(outbox.pending()) == 1
 
 
+def test_order_service_product_id_is_normalized_to_inventory_sku():
+    repository = InventoryRepository({"book": 2})
+    outbox = InMemoryOutbox()
+    handler = InventoryHandler(InventoryAdapter(repository), outbox, repository)
+
+    events = handler.handle(order_created(items=[{"product_id": "book", "quantity": 1, "price": "10.00"}]))
+
+    assert events[0]["type"] == "inventory.reserved"
+    assert events[0]["payload"]["items"][0]["sku"] == "book"
+    assert repository.available("book") == 1
+
+
 @pytest.mark.parametrize("_spec_tag", ["@spec:AC-005"], ids=str)
 def test_ac_005_estoque_indisponivel_rejeita_sem_solicitar_pagamento__spec_AC_005(_spec_tag):
     repository = InventoryRepository({"tea": 1})

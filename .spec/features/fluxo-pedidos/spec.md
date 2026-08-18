@@ -1,7 +1,7 @@
 # Spec: Saga distribuída de pedidos
 
 > feature: fluxo-pedidos
-> status: pronta
+> status: auditada
 
 ## Contexto
 

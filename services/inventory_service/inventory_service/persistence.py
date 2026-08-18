@@ -92,7 +92,7 @@ class PostgresInventoryRepository:
     durable = True
 
     def __init__(self, database_url: str) -> None:
-        self.database_url = database_url
+        self.database_url = database_url.replace("postgresql+psycopg://", "postgresql://", 1)
         self._connection: Any | None = None
         self._depth = 0
 
@@ -128,6 +128,16 @@ class PostgresInventoryRepository:
                     created_at TIMESTAMPTZ NOT NULL DEFAULT now(), published_at TIMESTAMPTZ NULL
                 );
             """)
+        self.connection.commit()
+
+    def seed_stock(self, stock: dict[str, int]) -> None:
+        """Insere estoque inicial apenas quando o SKU ainda não existe."""
+        with self.connection.cursor() as cursor:
+            for sku, quantity in stock.items():
+                cursor.execute(
+                    "INSERT INTO inventory_stock (sku, quantity) VALUES (%s, %s) ON CONFLICT (sku) DO NOTHING",
+                    (sku, quantity),
+                )
         self.connection.commit()
 
     @contextmanager

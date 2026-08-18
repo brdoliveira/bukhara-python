@@ -1,0 +1,77 @@
+{
+  "feature": "fluxo-pedidos",
+  "timestamp": "2026-08-18T22:26:38.663Z",
+  "gitRev": "c126792",
+  "command": "py -3.12 -B -m pytest -q -p no:cacheprovider",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-001": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-002": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-003": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-004": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-005": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-006": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-007": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-008": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-009": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-010": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-011": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-012": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-013": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}

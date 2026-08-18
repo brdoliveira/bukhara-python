@@ -55,7 +55,7 @@ async def probe_available(probe: Any) -> bool:
 
 class PostgresReadinessProbe:
     def __init__(self, database_url: str) -> None:
-        self.database_url = database_url
+        self.database_url = database_url.replace("postgresql+psycopg://", "postgresql://", 1)
 
     async def check(self) -> bool:
         def query() -> bool:
@@ -76,7 +76,8 @@ class KafkaReadinessProbe:
 
     async def check(self) -> bool:
         if self.runtime and self.runtime.producer is not None:
-            return bool(self.runtime.producer.client.bootstrap_connected())
+            await self.runtime.producer.client.force_metadata_update()
+            return True
         from aiokafka import AIOKafkaProducer
 
         producer = AIOKafkaProducer(bootstrap_servers=self.bootstrap_servers, request_timeout_ms=2000)
@@ -126,9 +127,10 @@ class KafkaDispatchBroker(InMemoryBroker):
 
 
 class KafkaInventoryRuntime:
-    def __init__(self, *, database_url: str, bootstrap_servers: str) -> None:
+    def __init__(self, *, database_url: str, bootstrap_servers: str, initial_stock: dict[str, int] | None = None) -> None:
         self.database_url = database_url
         self.bootstrap_servers = bootstrap_servers
+        self.initial_stock = dict(initial_stock or {})
         self.repository = PostgresInventoryRepository(database_url)
         self.producer: Any | None = None
         self.consumer: Any | None = None
@@ -140,6 +142,8 @@ class KafkaInventoryRuntime:
         from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 
         await asyncio.to_thread(self.repository.initialize)
+        if self.initial_stock:
+            await asyncio.to_thread(self.repository.seed_stock, self.initial_stock)
         self.producer = AIOKafkaProducer(bootstrap_servers=self.bootstrap_servers)
         await self.producer.start()
         self.consumer = AIOKafkaConsumer(
@@ -231,7 +235,8 @@ def create_app(
 ) -> FastAPI:
     database_url = os.getenv("DATABASE_URL", "postgresql://inventory:inventory@localhost:5432/inventory")
     bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
-    managed_runtime = runtime or (None if kafka is not None or postgres is not None else KafkaInventoryRuntime(database_url=database_url, bootstrap_servers=bootstrap_servers))
+    initial_stock = json.loads(os.getenv("INVENTORY_INITIAL_STOCK", "{}"))
+    managed_runtime = runtime or (None if kafka is not None or postgres is not None else KafkaInventoryRuntime(database_url=database_url, bootstrap_servers=bootstrap_servers, initial_stock=initial_stock))
     kafka_probe = kafka or KafkaReadinessProbe(bootstrap_servers, managed_runtime)
     postgres_probe = postgres or PostgresReadinessProbe(database_url)
 

@@ -1,6 +1,6 @@
 {
-  "testCommand": "pytest -q",
-  "reporter": "pytest-json",
+  "testCommand": "py -3.12 -B -m pytest -q -p no:cacheprovider",
+  "reporter": "exitcode",
   "testGlobs": [
     "test/**",
     "tests/**",
@@ -8,7 +8,7 @@
     "packages/**/tests/**"
   ],
   "srcGlobs": [
-    "services/**",
-    "packages/**"
+    "services/**/*.py",
+    "packages/**/*.py"
   ]
 }

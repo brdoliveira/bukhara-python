@@ -24,6 +24,6 @@ Os fatos trafegam em `orders.events`, `inventory.events`, `payments.events` e `n
 O serviço `kafka-init` cria todos os tópicos no Compose. Para inspecioná-los:
 
 ```bash
-docker compose exec kafka kafka-topics.sh --bootstrap-server kafka:9092 --list
+docker compose exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:19092 --list
 docker compose logs -f order-service inventory-service payment-service notification-service
 ```
