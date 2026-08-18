@@ -1,0 +1,14 @@
+{
+  "testCommand": "pytest -q",
+  "reporter": "pytest-json",
+  "testGlobs": [
+    "test/**",
+    "tests/**",
+    "services/**/tests/**",
+    "packages/**/tests/**"
+  ],
+  "srcGlobs": [
+    "services/**",
+    "packages/**"
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "schema": 1,
+  "sinais": {
+    "ARQUIVO_INEXISTENTE::fluxo-pedidos::T-001": {
+      "codigo": "ARQUIVO_INEXISTENTE",
+      "feature": "fluxo-pedidos",
+      "ref": "T-001",
+      "ocorrencias": 22,
+      "primeiraVez": "2026-08-18T19:06:29.957Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "ARQUIVO_INEXISTENTE::fluxo-pedidos::T-002": {
+      "codigo": "ARQUIVO_INEXISTENTE",
+      "feature": "fluxo-pedidos",
+      "ref": "T-002",
+      "ocorrencias": 20,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "ARQUIVO_INEXISTENTE::fluxo-pedidos::T-003": {
+      "codigo": "ARQUIVO_INEXISTENTE",
+      "feature": "fluxo-pedidos",
+      "ref": "T-003",
+      "ocorrencias": 21,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "ARQUIVO_INEXISTENTE::fluxo-pedidos::T-004": {
+      "codigo": "ARQUIVO_INEXISTENTE",
+      "feature": "fluxo-pedidos",
+      "ref": "T-004",
+      "ocorrencias": 21,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "ARQUIVO_INEXISTENTE::fluxo-pedidos::T-005": {
+      "codigo": "ARQUIVO_INEXISTENTE",
+      "feature": "fluxo-pedidos",
+      "ref": "T-005",
+      "ocorrencias": 20,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "ARQUIVO_INEXISTENTE::fluxo-pedidos::T-006": {
+      "codigo": "ARQUIVO_INEXISTENTE",
+      "feature": "fluxo-pedidos",
+      "ref": "T-006",
+      "ocorrencias": 16,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "ARQUIVO_INEXISTENTE::fluxo-pedidos::T-007": {
+      "codigo": "ARQUIVO_INEXISTENTE",
+      "feature": "fluxo-pedidos",
+      "ref": "T-007",
+      "ocorrencias": 4,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-001": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-001",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-002": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-002",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-003": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-003",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-004": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-004",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-005": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-005",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-006": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-006",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-007": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-007",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-008": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-008",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-009": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-009",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-010": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-010",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-011": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-011",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-012": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-012",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "GLOB_SEM_ARQUIVOS::—::P-002": {
+      "codigo": "GLOB_SEM_ARQUIVOS",
+      "feature": "—",
+      "ref": "P-002",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-08-18T19:06:29.958Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    },
+    "AC_SEM_TESTE::fluxo-pedidos::AC-013": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "fluxo-pedidos",
+      "ref": "AC-013",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-08-18T19:11:48.410Z",
+      "ultimaVez": "2026-08-18T19:11:48.410Z",
+      "gitRev": "649c876"
+    }
+  }
+}
