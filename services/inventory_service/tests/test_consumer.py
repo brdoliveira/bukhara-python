@@ -5,6 +5,7 @@ from services.inventory_service.inventory_service.consumer import InventoryConsu
 from services.inventory_service.inventory_service.handler import InventoryHandler
 from services.inventory_service.inventory_service.outbox import InMemoryOutbox
 from services.inventory_service.inventory_service.persistence import InventoryRepository
+from services.inventory_service.inventory_service.main import KafkaDispatchBroker
 
 
 def event(event_id="evt-1", **overrides):
@@ -79,6 +80,19 @@ def test_ac_010_evento_duplicado_confirma_sem_repetir_reserva_ou_publicacao__spe
     assert broker.acknowledged == ["evt-1", "evt-1"]
 
 
+def test_envelope_kafka_com_event_type_e_normalizado_sem_perder_identificadores():
+    service, repository, broker = consumer()
+    message = event()
+    message["event_type"] = message.pop("type")
+
+    result = service.consume(message)
+
+    assert result.status == "processed"
+    assert repository.available("tea") == 2
+    assert broker.published[0]["event_type"] == "inventory.reserved"
+    assert broker.published[0]["causation_id"] == "evt-1"
+
+
 @pytest.mark.parametrize("_spec_tag", ["@spec:AC-011"], ids=str)
 def test_ac_011_evento_invalido_vai_para_dlq_e_consumidor_segue_processando__spec_AC_011(_spec_tag):
     service, _, broker = consumer()
@@ -90,3 +104,32 @@ def test_ac_011_evento_invalido_vai_para_dlq_e_consumidor_segue_processando__spe
     assert broker.dlq[0]["validation_errors"]
     assert valid.status == "processed"
     assert broker.published[-1]["event_id"] != "evt-valid"
+
+
+class ProducerDouble:
+    def __init__(self):
+        self.messages = []
+
+    async def send_and_wait(self, topic, value, key):
+        self.messages.append((topic, key, value))
+
+
+@pytest.mark.parametrize("_spec_tag", ["@spec:AC-008", "@spec:AC-011"], ids=str)
+def test_runtime_broker_publica_retry_e_dlq_com_double_sem_kafka_local__spec_AC_008_AC_011(_spec_tag):
+    async def scenario():
+        producer = ProducerDouble()
+        broker = KafkaDispatchBroker(producer)
+        retry = event(event_type="order.created", retry_attempt=1)
+        broker.schedule_retry(retry, delay_seconds=5)
+        broker.send_to_dlq(event("evt-invalid"), error_type="ValidationError", origin_service="inventory-service", attempts=0, validation_errors=["payload missing"])
+        await broker.flush()
+        return producer.messages
+
+    import asyncio
+
+    messages = asyncio.run(scenario())
+    assert [topic for topic, _, _ in messages] == ["inventory.retry.1", "inventory.dlq"]
+    retry_payload = __import__("json").loads(messages[0][2])
+    assert retry_payload["event_id"] == "evt-1"
+    assert retry_payload["event_type"] == "order.created"
+    assert messages[0][1] == b"order-1"
