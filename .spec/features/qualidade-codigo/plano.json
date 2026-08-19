@@ -1,0 +1,221 @@
+{
+  "runId": "bukhara-python-qualidade-codigo-mt0grh2r",
+  "feature": "qualidade-codigo",
+  "agent": "codex",
+  "modo": "paralelo",
+  "paralelizar": [
+    "T-013",
+    "T-014",
+    "T-015",
+    "T-016",
+    "T-017"
+  ],
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-08-19 19:07",
+  "branchTrabalho": "spec/qualidade-codigo",
+  "baseDir": ".spec/features/qualidade-codigo",
+  "specDir": ".spec",
+  "repoName": "bukhara-python",
+  "logsDir": "../onp-worktrees/bukhara-python-qualidade-codigo-logs",
+  "ondas": [
+    [
+      "faixa-1",
+      "faixa-2",
+      "faixa-3"
+    ],
+    [
+      "faixa-4",
+      "faixa-5"
+    ]
+  ],
+  "faixas": [
+    {
+      "id": "faixa-1",
+      "branch": "spec/qualidade-codigo-faixa-1",
+      "worktree": "../onp-worktrees/bukhara-python-qualidade-codigo-faixa-1",
+      "tarefas": [
+        {
+          "id": "T-013",
+          "titulo": "Documentar e testar pacotes compartilhados",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "packages/event_bus/event_bus/envelope.py",
+            "packages/event_bus/event_bus/health.py",
+            "packages/event_bus/event_bus/inbox.py",
+            "packages/event_bus/event_bus/outbox.py",
+            "packages/event_bus/event_bus/retry.py",
+            "packages/event_bus/tests/test_envelope.py",
+            "packages/event_bus/tests/test_health.py",
+            "packages/event_bus/tests/test_inbox.py",
+            "packages/event_bus/tests/test_outbox.py",
+            "packages/event_bus/tests/test_retry.py",
+            "packages/observability/observability/logging.py",
+            "packages/observability/observability/telemetry.py",
+            "packages/observability/tests/test_logging.py",
+            "packages/observability/tests/test_telemetry.py"
+          ],
+          "refs": [
+            "US-008",
+            "US-009",
+            "AC-024",
+            "AC-026"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-2",
+      "branch": "spec/qualidade-codigo-faixa-2",
+      "worktree": "../onp-worktrees/bukhara-python-qualidade-codigo-faixa-2",
+      "tarefas": [
+        {
+          "id": "T-014",
+          "titulo": "Documentar e testar o serviço de pedidos",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "services/order_service/order_service/api.py",
+            "services/order_service/order_service/main.py",
+            "services/order_service/order_service/models.py",
+            "services/order_service/order_service/outbox.py",
+            "services/order_service/order_service/persistence.py",
+            "services/order_service/order_service/producer.py",
+            "services/order_service/tests/test_api.py",
+            "services/order_service/tests/test_health.py",
+            "services/order_service/tests/test_observability.py",
+            "services/order_service/tests/test_outbox.py",
+            "services/order_service/tests/test_recovery.py"
+          ],
+          "refs": [
+            "US-008",
+            "US-009",
+            "AC-024",
+            "AC-027"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-3",
+      "branch": "spec/qualidade-codigo-faixa-3",
+      "worktree": "../onp-worktrees/bukhara-python-qualidade-codigo-faixa-3",
+      "tarefas": [
+        {
+          "id": "T-015",
+          "titulo": "Documentar e testar o serviço de estoque",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "services/inventory_service/inventory_service/consumer.py",
+            "services/inventory_service/inventory_service/handler.py",
+            "services/inventory_service/inventory_service/main.py",
+            "services/inventory_service/inventory_service/outbox.py",
+            "services/inventory_service/inventory_service/persistence.py",
+            "services/inventory_service/tests/test_consumer.py",
+            "services/inventory_service/tests/test_handler.py",
+            "services/inventory_service/tests/test_health.py",
+            "services/inventory_service/tests/test_observability.py",
+            "services/inventory_service/tests/test_persistence.py",
+            "services/inventory_service/tests/test_runtime.py"
+          ],
+          "refs": [
+            "US-008",
+            "US-009",
+            "AC-024",
+            "AC-028"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-4",
+      "branch": "spec/qualidade-codigo-faixa-4",
+      "worktree": "../onp-worktrees/bukhara-python-qualidade-codigo-faixa-4",
+      "tarefas": [
+        {
+          "id": "T-016",
+          "titulo": "Documentar e testar o serviço de pagamento",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "services/payment_service/payment_service/consumer.py",
+            "services/payment_service/payment_service/handler.py",
+            "services/payment_service/payment_service/main.py",
+            "services/payment_service/payment_service/outbox.py",
+            "services/payment_service/payment_service/persistence.py",
+            "services/payment_service/tests/test_consumer.py",
+            "services/payment_service/tests/test_handler.py",
+            "services/payment_service/tests/test_health.py",
+            "services/payment_service/tests/test_observability.py",
+            "services/payment_service/tests/test_persistence.py",
+            "services/payment_service/tests/test_runtime.py"
+          ],
+          "refs": [
+            "US-008",
+            "US-009",
+            "AC-024",
+            "AC-029"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-5",
+      "branch": "spec/qualidade-codigo-faixa-5",
+      "worktree": "../onp-worktrees/bukhara-python-qualidade-codigo-faixa-5",
+      "tarefas": [
+        {
+          "id": "T-017",
+          "titulo": "Documentar e testar o serviço de notificação",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "services/notification_service/notification_service/adapter.py",
+            "services/notification_service/notification_service/consumer.py",
+            "services/notification_service/notification_service/handler.py",
+            "services/notification_service/notification_service/main.py",
+            "services/notification_service/notification_service/persistence.py",
+            "services/notification_service/tests/test_consumer.py",
+            "services/notification_service/tests/test_handler.py",
+            "services/notification_service/tests/test_health.py",
+            "services/notification_service/tests/test_observability.py",
+            "services/notification_service/tests/test_persistence.py",
+            "services/notification_service/tests/test_worker.py"
+          ],
+          "refs": [
+            "US-008",
+            "US-009",
+            "AC-024",
+            "AC-030"
+          ]
+        }
+      ]
+    }
+  ],
+  "sequenciais": [
+    {
+      "id": "T-018",
+      "titulo": "Publicar referência e ativar gate de cobertura",
+      "modelo": "gpt-5.6-luna",
+      "esforco": "low",
+      "arquivos": [
+        "pyproject.toml",
+        "README.md",
+        "docs/code-reference.md",
+        "tests/integration/test_code_documentation.py",
+        "tests/integration/test_quality_gate.py"
+      ],
+      "refs": [
+        "US-008",
+        "US-009",
+        "AC-024",
+        "AC-025",
+        "AC-031"
+      ]
+    }
+  ],
+  "concluidas": [],
+  "avisos": []
+}
