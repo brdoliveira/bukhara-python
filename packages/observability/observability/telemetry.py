@@ -37,6 +37,7 @@ class TelemetrySettings:
 
     @property
     def endpoint(self) -> Optional[str]:
+        """Resolve an explicit OTLP endpoint or the process environment value."""
         # Sem endpoint explícito o SDK permanece local. Isso evita I/O de rede
         # em testes e permite que a saga rode sem a stack de observabilidade.
         return self.otlp_endpoint or os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
@@ -46,6 +47,7 @@ class Telemetry:
     """Fachada para traces e métricas da aplicação, tolerante a falhas."""
 
     def __init__(self, *, service_name: str, tracer_provider: TracerProvider, meter_provider: MeterProvider) -> None:
+        """Create instruments whose lifecycle is owned by one service instance."""
         self.service_name = service_name
         self.tracer_provider = tracer_provider
         self.meter_provider = meter_provider
@@ -78,6 +80,7 @@ class Telemetry:
             yield span
 
     def record_http_response(self, *, method: str, route: str, status_code: int, duration_seconds: float) -> None:
+        """Record low-cardinality HTTP metrics and enrich the active span safely."""
         try:
             trace.get_current_span().set_attribute("http.response.status_code", status_code)
         except Exception:
@@ -145,6 +148,7 @@ class Telemetry:
 
     @staticmethod
     def _safe_add(counter: Any, value: int, attributes: Mapping[str, Any]) -> None:
+        """Add a counter value without allowing exporter errors into the saga."""
         if HIGH_CARDINALITY_ATTRIBUTES.intersection(attributes):
             raise ValueError("metric attributes cannot include high-cardinality identifiers")
         try:
@@ -155,6 +159,7 @@ class Telemetry:
 
     @staticmethod
     def _safe_record(histogram: Any, value: float, attributes: Mapping[str, Any]) -> None:
+        """Record a histogram value while intentionally swallowing SDK failures."""
         try:
             histogram.record(value, attributes=attributes)
         except Exception:
@@ -170,10 +175,13 @@ class Telemetry:
 
 
 class _NoopSpan:
+    """Minimal span substitute used if instrumentation cannot start."""
     def set_attribute(self, key: str, value: Any) -> None:
+        """Accept span enrichment calls without producing telemetry."""
         return None
 
     def set_status(self, status: Any) -> None:
+        """Accept span status calls without producing telemetry."""
         return None
 
 

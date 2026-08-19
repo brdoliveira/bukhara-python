@@ -13,3 +13,15 @@ def test_health_e_readiness_distinguem_processo_de_dependencias__spec_AC_012() -
 
     state["kafka"] = True
     assert endpoints.ready().status_code == 200
+
+
+def test_readiness_degrada_para_indisponivel_quando_probe_falha__spec_AC_026() -> None:
+    """@spec:AC-026 Falhas de dependência não propagam pela rota de prontidão."""
+    def broken_probe() -> bool:
+        raise ConnectionError("database unavailable")
+
+    report = HealthEndpoints({"postgres": broken_probe}).ready()
+
+    assert report.status == "not_ready"
+    assert report.status_code == 503
+    assert report.dependencies == {"postgres": "unavailable"}

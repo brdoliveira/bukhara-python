@@ -10,11 +10,13 @@ DependencyProbe = Callable[[], bool]
 
 @dataclass(frozen=True)
 class ReadinessReport:
+    """Snapshot of dependency readiness suitable for a FastAPI response."""
     status: str
     dependencies: Mapping[str, str]
 
     @property
     def status_code(self) -> int:
+        """Map the semantic readiness state to the HTTP readiness status."""
         return 200 if self.status == "ready" else 503
 
 
@@ -25,9 +27,11 @@ class HealthEndpoints:
         self._dependencies = dict(dependencies)
 
     def health(self) -> tuple[int, dict[str, str]]:
+        """Report process liveness without probing external dependencies."""
         return 200, {"status": "live"}
 
     def ready(self) -> ReadinessReport:
+        """Probe each dependency, treating probe failures as unavailable."""
         statuses: dict[str, str] = {}
         for name, probe in self._dependencies.items():
             try:

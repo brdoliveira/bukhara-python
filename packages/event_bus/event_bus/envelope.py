@@ -59,10 +59,20 @@ class EventEnvelope:
 
     @classmethod
     def new(cls, *, event_type: str, producer: str, correlation_id: str, payload: Mapping[str, Any], causation_id: Optional[str] = None, event_version: int = 1, event_id: Optional[str] = None, occurred_at: Optional[datetime] = None) -> "EventEnvelope":
+        """Create a validated event, generating identity and timestamp when absent.
+
+        Callers keep the generated ``event_id`` unchanged when an event is retried;
+        that invariant enables Inbox and Outbox idempotency.
+        """
         return cls(event_id=event_id or str(uuid4()), event_type=event_type, event_version=event_version, occurred_at=occurred_at or datetime.now(timezone.utc), producer=producer, correlation_id=correlation_id, causation_id=causation_id, payload=dict(payload))
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "EventEnvelope":
+        """Deserialize the current envelope shape and the legacy ``type`` alias.
+
+        Invalid fields are collected by :class:`EnvelopeValidationError`, so a
+        consumer can route the offending record to the DLQ without crashing.
+        """
         if not isinstance(value, Mapping):
             raise EnvelopeValidationError(["envelope must be an object"])
         raw_time = value.get("occurred_at")
@@ -74,7 +84,9 @@ class EventEnvelope:
         return cls(event_id=value.get("event_id"), event_type=value.get("event_type", value.get("type")), event_version=value.get("event_version"), occurred_at=raw_time, producer=value.get("producer"), correlation_id=value.get("correlation_id"), causation_id=value.get("causation_id"), payload=value.get("payload"), retry_attempt=value.get("retry_attempt", 0))
 
     def for_retry(self, attempt: int) -> "EventEnvelope":
+        """Return an immutable retry copy while preserving event identity."""
         return replace(self, retry_attempt=attempt)
 
     def to_dict(self) -> dict[str, Any]:
+        """Return the wire representation used by producers and persistence."""
         return {"event_id": self.event_id, "event_type": self.event_type, "event_version": self.event_version, "occurred_at": self.occurred_at.isoformat(), "producer": self.producer, "correlation_id": self.correlation_id, "causation_id": self.causation_id, "payload": dict(self.payload), "retry_attempt": self.retry_attempt}

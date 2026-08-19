@@ -1,7 +1,17 @@
 from __future__ import annotations
 
-from event_bus.envelope import EventEnvelope
-from event_bus.retry import DeadLetter, RetryCoordinator, TransientDependencyError
+import pytest
+
+from event_bus.envelope import EnvelopeValidationError, EventEnvelope
+from event_bus.retry import (
+    BusinessRuleError,
+    DeadLetter,
+    FailureKind,
+    RetryCoordinator,
+    RetryPolicy,
+    TransientDependencyError,
+    classify_failure,
+)
 
 EVENT_ID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
 CORRELATION_ID = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"
@@ -62,3 +72,30 @@ def test_retry_esgotado_executa_fallback_e_dlq_uma_vez__spec_AC_009() -> None:
     assert [(entry.error_type, entry.origin_service, entry.attempts) for entry in dlq] == [
         ("TransientDependencyError", "inventory-service", 3)
     ]
+
+
+def test_retry_classifica_erros_e_rejeita_politicas_invalidas__spec_AC_026() -> None:
+    """@spec:AC-026 A política limita tentativas e separa falhas terminais."""
+    assert classify_failure(TransientDependencyError("temporary")) is FailureKind.TRANSIENT
+    assert classify_failure(EnvelopeValidationError(["bad payload"])) is FailureKind.VALIDATION
+    assert classify_failure(BusinessRuleError("declined")) is FailureKind.BUSINESS
+    assert classify_failure(RuntimeError("unknown")) is FailureKind.UNKNOWN
+
+    with pytest.raises(ValueError, match="max_attempts"):
+        RetryPolicy(max_attempts=2)
+    with pytest.raises(ValueError, match="positive and increasing"):
+        RetryPolicy(base_delay_seconds=0)
+    with pytest.raises(ValueError, match="outside"):
+        RetryPolicy().delay_for(4)
+
+
+def test_envelope_invalido_vai_para_dlq_uma_vez_sem_retry__spec_AC_026() -> None:
+    """@spec:AC-026 Validação é terminal e redelivery não duplica a DLQ."""
+    coordinator = RetryCoordinator()
+    dlq: list[DeadLetter] = []
+    validation_error = EnvelopeValidationError(["payload must be an object"])
+
+    coordinator.send_invalid_to_dlq(event(), validation_error, origin_service="inventory-service", send_to_dlq=dlq.append)
+    coordinator.send_invalid_to_dlq(event(), validation_error, origin_service="inventory-service", send_to_dlq=dlq.append)
+
+    assert [(entry.attempts, entry.validation_errors) for entry in dlq] == [(0, ("payload must be an object",))]

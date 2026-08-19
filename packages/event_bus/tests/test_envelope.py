@@ -56,3 +56,26 @@ def test_evento_invalido_e_isolado_sem_impedir_proximo_evento__spec_AC_011() -> 
     assert dlq[0][0] == "EnvelopeValidationError"
     assert dlq[0][1]
     assert next_event.event_id == EVENT_ID
+
+
+def test_envelope_rejeita_campos_booleanos_e_datas_sem_fuso__spec_AC_026() -> None:
+    """@spec:AC-026 Tipos ambíguos são rejeitados antes de entrar no consumidor."""
+    invalid = {
+        "event_id": EVENT_ID,
+        "event_type": "order.created",
+        "event_version": True,
+        "occurred_at": datetime(2026, 8, 19),
+        "producer": "order-service",
+        "correlation_id": CORRELATION_ID,
+        "payload": {"order_id": "order-1"},
+        "retry_attempt": False,
+    }
+
+    with pytest.raises(EnvelopeValidationError) as captured:
+        EventEnvelope.from_dict(invalid)
+
+    assert set(captured.value.errors) == {
+        "event_version must be a positive integer",
+        "occurred_at must be a timezone-aware datetime",
+        "retry_attempt must be a non-negative integer",
+    }

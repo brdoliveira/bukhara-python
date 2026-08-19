@@ -17,12 +17,15 @@ class StructuredLogger:
         self.service_name = service_name
 
     def info(self, message: str, *, order_id: Optional[str] = None, correlation_id: Optional[str] = None, **attributes: Any) -> None:
+        """Emit an informational log with optional business correlation fields."""
         self.log(logging.INFO, message, order_id=order_id, correlation_id=correlation_id, **attributes)
 
     def error(self, message: str, *, order_id: Optional[str] = None, correlation_id: Optional[str] = None, **attributes: Any) -> None:
+        """Emit an error log with optional business correlation fields."""
         self.log(logging.ERROR, message, order_id=order_id, correlation_id=correlation_id, **attributes)
 
     def log(self, level: int, message: str, *, order_id: Optional[str] = None, correlation_id: Optional[str] = None, **attributes: Any) -> None:
+        """Attach active trace context and delegate to the standard logger."""
         context = trace.get_current_span().get_span_context()
         extra: dict[str, Any] = {
             "service.name": self.service_name,
@@ -38,6 +41,7 @@ class StructuredLogger:
 
 
 def get_logger(name: str, *, service_name: str) -> StructuredLogger:
+    """Return a structured adapter for a named Python logger."""
     return StructuredLogger(logging.getLogger(name), service_name=service_name)
 
 
