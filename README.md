@@ -122,7 +122,7 @@ sequenceDiagram
         Worker->>Kafka: service.dlq / DLQ
     end
 
-    Note over Order,Notification: event_id deduplica; correlation_id e traceparent conectam toda a saga
+    Note over Order,Notification: event_id deduplica, correlation_id e traceparent conectam toda a saga
 ```
 
 ## Fluxo de eventos

@@ -44,3 +44,5 @@ def test_readme_detalha_saga_e_resiliencia_no_lld__spec_AC_023() -> None:
         "DLQ",
     ):
         assert contract in lld
+    assert "event_id deduplica, correlation_id e traceparent conectam toda a saga" in lld
+    assert "event_id deduplica;" not in lld

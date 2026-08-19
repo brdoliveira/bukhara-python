@@ -1,7 +1,7 @@
 {
   "feature": "fluxo-pedidos",
-  "timestamp": "2026-08-19T18:47:26.004Z",
-  "gitRev": "2cf4fad",
+  "timestamp": "2026-08-19T18:52:09.264Z",
+  "gitRev": "2b087ea",
   "command": "py -3.12 -B -m pytest -q -p no:cacheprovider",
   "reporter": "exitcode",
   "exitCode": 0,
