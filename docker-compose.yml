@@ -1,6 +1,18 @@
 name: fluxo-pedidos
 
 services:
+  otel-lgtm:
+    image: grafana/otel-lgtm:0.30.0
+    environment:
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /otel-lgtm/grafana/conf/provisioning/dashboards/custom/order-saga.json
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+      - "${OTEL_GRPC_PORT:-4317}:4317"
+      - "${OTEL_HTTP_PORT:-4318}:4318"
+    volumes:
+      - ./observability/grafana/dashboards.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/order-saga.yaml:ro
+      - ./observability/grafana/order-saga.json:/otel-lgtm/grafana/conf/provisioning/dashboards/custom/order-saga.json:ro
+
   kafka:
     image: apache/kafka:4.3.1
     hostname: kafka
@@ -64,6 +76,9 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/orders
       KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+      OTEL_SERVICE_NAME: order-service
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-lgtm:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
     ports:
       - "${ORDER_SERVICE_PORT:-8000}:8000"
     depends_on:
@@ -84,6 +99,9 @@ services:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/inventory
       KAFKA_BOOTSTRAP_SERVERS: kafka:19092
       INVENTORY_INITIAL_STOCK: '{"book": 100}'
+      OTEL_SERVICE_NAME: inventory-service
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-lgtm:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
     ports:
       - "${INVENTORY_SERVICE_PORT:-8001}:8001"
     depends_on:
@@ -98,6 +116,9 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/payments
       KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+      OTEL_SERVICE_NAME: payment-service
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-lgtm:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
     ports:
       - "${PAYMENT_SERVICE_PORT:-8002}:8002"
     depends_on:
@@ -112,6 +133,9 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/notifications
       KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+      OTEL_SERVICE_NAME: notification-service
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-lgtm:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
     ports:
       - "${NOTIFICATION_SERVICE_PORT:-8003}:8003"
     depends_on:

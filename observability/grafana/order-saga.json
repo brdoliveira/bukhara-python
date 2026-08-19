@@ -1,0 +1,115 @@
+{
+  "annotations": {"list": []},
+  "description": "Visão operacional da saga: processamento, resiliência, logs e traces.",
+  "editable": false,
+  "links": [
+    {
+      "title": "Investigar logs no Loki",
+      "type": "link",
+      "url": "/explore?left={\"datasource\":\"loki\",\"queries\":[{\"expr\":\"{service_name=~\\\"$service\\\"}\"}]}",
+      "targetBlank": false
+    },
+    {
+      "title": "Investigar traces no Tempo",
+      "type": "link",
+      "url": "/explore?left={\"datasource\":\"tempo\",\"queries\":[{}]}",
+      "targetBlank": false
+    }
+  ],
+  "panels": [
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "id": 1,
+      "targets": [{"expr": "sum by (service_name) (rate(saga_event_processing_total{service_name=~\"$service\"}[$__rate_interval]))", "legendFormat": "{{service_name}}", "refId": "A"}],
+      "title": "Taxa de processamento por serviço",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "id": 2,
+      "targets": [{"expr": "sum by (service_name) (rate(saga_event_processing_total{service_name=~\"$service\",result=~\"error|failure\"}[$__rate_interval]))", "legendFormat": "{{service_name}}", "refId": "A"}],
+      "title": "Erros por serviço",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+      "id": 3,
+      "targets": [{"expr": "histogram_quantile(0.95, sum by (le, service_name) (rate(saga_event_processing_duration_seconds_bucket{service_name=~\"$service\"}[$__rate_interval])))", "legendFormat": "p95 {{service_name}}", "refId": "A"}],
+      "title": "Duração p95 por serviço",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+      "id": 4,
+      "targets": [{"expr": "sum by (service_name, event_type, result) (rate(saga_event_processing_total{service_name=~\"$service\"}[$__rate_interval]))", "legendFormat": "{{service_name}} · {{event_type}} · {{result}}", "refId": "A"}],
+      "title": "Eventos por tipo e resultado",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 16},
+      "id": 5,
+      "targets": [{"expr": "sum by (service_name, event_type) (rate(saga_retry_total{service_name=~\"$service\"}[$__rate_interval]))", "legendFormat": "{{service_name}} · {{event_type}}", "refId": "A"}],
+      "title": "Retries por serviço",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 16},
+      "id": 6,
+      "targets": [{"expr": "sum by (service_name, event_type) (rate(saga_fallback_total{service_name=~\"$service\"}[$__rate_interval]))", "legendFormat": "{{service_name}} · {{event_type}}", "refId": "A"}],
+      "title": "Fallbacks por serviço",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 16},
+      "id": 7,
+      "targets": [{"expr": "sum by (service_name, event_type) (rate(saga_dlq_total{service_name=~\"$service\"}[$__rate_interval]))", "legendFormat": "{{service_name}} · {{event_type}}", "refId": "A"}],
+      "title": "DLQ por serviço",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 24},
+      "id": 8,
+      "targets": [{"expr": "sum by (service_name, event_type, result) (rate(saga_outbox_drain_total{service_name=~\"$service\"}[$__rate_interval]))", "legendFormat": "{{service_name}} · {{event_type}} · {{result}}", "refId": "A"}],
+      "title": "Outbox drenada por serviço",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "tags": ["saga", "otel", "resilience"],
+  "templating": {
+    "list": [
+      {
+        "current": {"selected": true, "text": "All", "value": ".*"},
+        "datasource": {"type": "prometheus", "uid": "prometheus"},
+        "definition": "label_values(saga_event_processing_total, service_name)",
+        "includeAll": true,
+        "multi": true,
+        "name": "service",
+        "query": {"query": "label_values(saga_event_processing_total, service_name)", "refId": "PrometheusVariableQueryEditor-VariableQuery"},
+        "type": "query"
+      }
+    ]
+  },
+  "time": {"from": "now-1h", "to": "now"},
+  "timezone": "browser",
+  "title": "Saga de pedidos — Operação",
+  "uid": "order-saga",
+  "version": 1
+}

@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: Order saga
+    orgId: 1
+    folder: Saga de pedidos
+    type: file
+    disableDeletion: true
+    editable: false
+    options:
+      path: /otel-lgtm/grafana/conf/provisioning/dashboards/custom
