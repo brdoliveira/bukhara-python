@@ -16,6 +16,8 @@ import os
 from typing import Any, AsyncIterator, Protocol
 
 from fastapi import FastAPI, Response
+from observability.logging import configure_logging, get_logger
+from observability.telemetry import Telemetry, TelemetrySettings, configure_telemetry, instrument_fastapi
 
 from .adapter import InMemoryBroker, InventoryAdapter
 from .consumer import InventoryConsumer
@@ -91,9 +93,10 @@ class KafkaReadinessProbe:
 class KafkaDispatchBroker(InMemoryBroker):
     """Bridge: o consumidor s\u00edncrono registra inten\u00e7\u00f5es; este adaptador as envia."""
 
-    def __init__(self, producer: Any) -> None:
+    def __init__(self, producer: Any, telemetry: Telemetry | None = None) -> None:
         super().__init__()
         self.producer = producer
+        self.telemetry = telemetry
 
     async def flush(self) -> None:
         retries, dlq = self.retries[:], self.dlq[:]
@@ -116,7 +119,15 @@ class KafkaDispatchBroker(InMemoryBroker):
 
     async def _send(self, topic: str, event: dict[str, Any]) -> None:
         key_source = event.get("order_id") or event.get("event", {}).get("order_id") or ""
-        await self.producer.send_and_wait(topic, json.dumps(self._canonical(event), default=str).encode("utf-8"), key=str(key_source).encode("utf-8"))
+        value = json.dumps(self._canonical(event), default=str).encode("utf-8")
+        if self.telemetry is None:
+            await self.producer.send_and_wait(topic, value, key=str(key_source).encode("utf-8"))
+            return
+        with self.telemetry.kafka_publish(topic=topic, event=event) as headers:
+            try:
+                await self.producer.send_and_wait(topic, value, key=str(key_source).encode("utf-8"), headers=[(key, item.encode("utf-8")) for key, item in headers.items()])
+            except TypeError:  # doubles antigos não precisam conhecer headers Kafka.
+                await self.producer.send_and_wait(topic, value, key=str(key_source).encode("utf-8"))
 
     @staticmethod
     def _canonical(event: dict[str, Any]) -> dict[str, Any]:
@@ -127,7 +138,14 @@ class KafkaDispatchBroker(InMemoryBroker):
 
 
 class KafkaInventoryRuntime:
-    def __init__(self, *, database_url: str, bootstrap_servers: str, initial_stock: dict[str, int] | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        database_url: str,
+        bootstrap_servers: str,
+        initial_stock: dict[str, int] | None = None,
+        telemetry: Telemetry | None = None,
+    ) -> None:
         self.database_url = database_url
         self.bootstrap_servers = bootstrap_servers
         self.initial_stock = dict(initial_stock or {})
@@ -137,6 +155,8 @@ class KafkaInventoryRuntime:
         self.broker: KafkaDispatchBroker | None = None
         self._task: asyncio.Task[None] | None = None
         self._running = False
+        self.telemetry = telemetry
+        self.logger = get_logger("inventory-service", service_name=SERVICE_NAME)
 
     async def start(self) -> None:
         from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
@@ -154,7 +174,7 @@ class KafkaInventoryRuntime:
             auto_offset_reset="earliest",
         )
         await self.consumer.start()
-        self.broker = KafkaDispatchBroker(self.producer)
+        self.broker = KafkaDispatchBroker(self.producer, self.telemetry)
         self._running = True
         self._task = asyncio.create_task(self._consume_loop(), name="inventory-kafka-consumer")
         await self.publish_pending_outbox()
@@ -178,10 +198,10 @@ class KafkaInventoryRuntime:
         async for message in self.consumer:
             if not self._running:
                 break
-            await self.process_message(message.value)
+            await self.process_message(message.value, headers=message.headers)
             await self.consumer.commit()
 
-    async def process_message(self, value: bytes | str | dict[str, Any]) -> str:
+    async def process_message(self, value: bytes | str | dict[str, Any], headers: Any = None) -> str:
         """M\u00e9todo separado para testes com doubles, sem broker local."""
         try:
             raw = json.loads(value.decode("utf-8") if isinstance(value, bytes) else value) if not isinstance(value, dict) else value
@@ -199,7 +219,16 @@ class KafkaInventoryRuntime:
         assert self.broker is not None
         handler = InventoryHandler(InventoryAdapter(self.repository), PostgresOutbox(self.repository), self.repository)
         worker = InventoryConsumer(handler, self.repository, self.broker, publish_immediately=False, retry_delays=RETRY_DELAYS)
-        result = await asyncio.to_thread(worker.consume, raw)
+        if self.telemetry is None:
+            result = await asyncio.to_thread(worker.consume, raw)
+        else:
+            with self.telemetry.kafka_consume(topic="orders.events", event=raw if isinstance(raw, dict) else {}, headers=headers):
+                result = await asyncio.to_thread(worker.consume, raw)
+                self.telemetry.record_event(event_type=str(raw.get("event_type") or raw.get("type") or "unknown") if isinstance(raw, dict) else "unknown", result=result.status)
+                if result.status in {"retried", "dlq"}:
+                    self.telemetry.record_resilience(operation="retry" if result.status == "retried" else "dlq", event_type=str(raw.get("event_type") or raw.get("type") or "unknown") if isinstance(raw, dict) else "unknown", result=result.status)
+                if isinstance(raw, dict):
+                    self.logger.info("inventory event processed", order_id=raw.get("order_id"), correlation_id=raw.get("correlation_id"), result=result.status)
         await self.publish_pending_outbox()
         await self.broker.flush()
         return result.status
@@ -209,11 +238,13 @@ class KafkaInventoryRuntime:
         events = await asyncio.to_thread(self.repository.pending_outbox)
         for event in events:
             canonical = KafkaDispatchBroker._canonical(event)
-            await self.producer.send_and_wait(
-                "inventory.events",
-                json.dumps(canonical, default=str).encode("utf-8"),
-                key=event["order_id"].encode("utf-8"),
-            )
+            value = json.dumps(canonical, default=str).encode("utf-8")
+            if self.telemetry is None:
+                await self.producer.send_and_wait("inventory.events", value, key=event["order_id"].encode("utf-8"))
+            else:
+                with self.telemetry.kafka_publish(topic="inventory.events", event=canonical) as headers:
+                    await self.producer.send_and_wait("inventory.events", value, key=event["order_id"].encode("utf-8"), headers=[(key, item.encode("utf-8")) for key, item in headers.items()])
+                self.telemetry.record_resilience(operation="outbox", event_type=str(canonical.get("event_type") or canonical.get("type") or "unknown"), result="drained")
             await asyncio.to_thread(self.repository.mark_outbox_published, event["event_id"])
         return len(events)
 
@@ -232,11 +263,14 @@ def create_app(
     postgres: Any | None = None,
     *,
     runtime: KafkaInventoryRuntime | None = None,
+    telemetry: Telemetry | None = None,
 ) -> FastAPI:
     database_url = os.getenv("DATABASE_URL", "postgresql://inventory:inventory@localhost:5432/inventory")
     bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
     initial_stock = json.loads(os.getenv("INVENTORY_INITIAL_STOCK", "{}"))
-    managed_runtime = runtime or (None if kafka is not None or postgres is not None else KafkaInventoryRuntime(database_url=database_url, bootstrap_servers=bootstrap_servers, initial_stock=initial_stock))
+    resolved_telemetry = telemetry or configure_telemetry(TelemetrySettings(service_name=SERVICE_NAME))
+    configure_logging(service_name=SERVICE_NAME)
+    managed_runtime = runtime or (None if kafka is not None or postgres is not None else KafkaInventoryRuntime(database_url=database_url, bootstrap_servers=bootstrap_servers, initial_stock=initial_stock, telemetry=resolved_telemetry))
     kafka_probe = kafka or KafkaReadinessProbe(bootstrap_servers, managed_runtime)
     postgres_probe = postgres or PostgresReadinessProbe(database_url)
 
@@ -252,6 +286,8 @@ def create_app(
                 await managed_runtime.stop()
 
     app = CompatFastAPI(title=SERVICE_NAME, lifespan=lifespan)
+    app.state.telemetry = resolved_telemetry
+    instrument_fastapi(app, resolved_telemetry)
 
     @app.get("/health")
     async def health() -> dict[str, str]:

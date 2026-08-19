@@ -8,9 +8,12 @@ processa HTTP ou Kafka só registra dados no SDK local.
 from __future__ import annotations
 
 import os
+from collections.abc import Iterable
 from contextlib import contextmanager
 from dataclasses import dataclass
+from time import perf_counter
 from typing import Any, Iterator, Mapping, MutableMapping, Optional
+from uuid import uuid4
 
 from opentelemetry import propagate, trace
 from opentelemetry.sdk.metrics import MeterProvider
@@ -96,6 +99,47 @@ class Telemetry:
             1,
             {"operation": operation, "event.type": event_type, "result": result},
         )
+
+    @contextmanager
+    def kafka_publish(self, *, topic: str, event: Mapping[str, Any]) -> Iterator[MutableMapping[str, str]]:
+        """Cria um span produtor e devolve headers W3C para o evento Kafka."""
+        attributes = _event_attributes(event)
+        attributes.update({"messaging.system": "kafka", "messaging.operation": "publish", "messaging.destination.name": topic})
+        try:
+            span_context = self.tracer.start_as_current_span("kafka publish " + topic, attributes=attributes)
+        except Exception:
+            # A publicação de negócio não deve depender da criação de um span.
+            yield {}
+            return
+        with span_context:
+            headers: dict[str, str] = {}
+            try:
+                inject_kafka_context(headers, order_id=attributes.get("order_id"), correlation_id=attributes.get("correlation_id"))
+            except Exception:
+                # Falha no propagador não é motivo para cancelar o envio Kafka.
+                headers = {}
+            yield headers
+
+    @contextmanager
+    def kafka_consume(
+        self, *, topic: str, event: Mapping[str, Any], headers: Mapping[str, Any] | None = None
+    ) -> Iterator[Any]:
+        """Restaura o trace pai de Kafka e associa identificadores ao span consumidor."""
+        try:
+            carrier = decode_kafka_headers(headers or {})
+            context, propagated = extract_kafka_context(carrier)
+        except Exception:
+            context, propagated = None, {}
+        attributes = _event_attributes(event)
+        attributes.update(propagated)
+        attributes.update({"messaging.system": "kafka", "messaging.operation": "process", "messaging.destination.name": topic})
+        try:
+            span_context = self.tracer.start_as_current_span("kafka process " + topic, context=context, attributes=attributes)
+        except Exception:
+            yield _NoopSpan()
+            return
+        with span_context as span:
+            yield span
 
     @staticmethod
     def _safe_add(counter: Any, value: int, attributes: Mapping[str, Any]) -> None:
@@ -184,6 +228,53 @@ def extract_kafka_context(headers: Mapping[str, str]) -> tuple[Any, dict[str, st
     context = propagate.extract(headers)
     attributes = {key: headers[key] for key in ("order_id", "correlation_id") if headers.get(key)}
     return context, attributes
+
+
+def decode_kafka_headers(headers: Mapping[str, Any] | Iterable[tuple[str, Any]]) -> dict[str, str]:
+    """Normaliza headers do aiokafka (bytes) para o carrier aceito pelo propagador."""
+    items = headers.items() if isinstance(headers, Mapping) else headers
+    decoded: dict[str, str] = {}
+    for key, value in items:
+        if value is None:
+            continue
+        decoded[str(key)] = value.decode("utf-8") if isinstance(value, bytes) else str(value)
+    return decoded
+
+
+def instrument_fastapi(app: Any, telemetry: Telemetry) -> None:
+    """Adiciona telemetria HTTP e o cabeçalho de correlação a uma aplicação FastAPI."""
+    if getattr(app.state, "_observability_http", False):
+        return
+
+    @app.middleware("http")
+    async def observe_http(request: Any, call_next: Any) -> Any:
+        correlation_id = request.headers.get("X-Correlation-ID") or str(uuid4())
+        request.state.correlation_id = correlation_id
+        started_at = perf_counter()
+        status_code = 500
+        with telemetry.http_request(method=request.method, route=request.url.path, correlation_id=correlation_id):
+            try:
+                response = await call_next(request)
+                status_code = response.status_code
+                response.headers["X-Correlation-ID"] = correlation_id
+                return response
+            finally:
+                telemetry.record_http_response(
+                    method=request.method,
+                    route=request.url.path,
+                    status_code=status_code,
+                    duration_seconds=perf_counter() - started_at,
+                )
+
+    app.state._observability_http = True
+
+
+def _event_attributes(event: Mapping[str, Any]) -> dict[str, str]:
+    return {
+        key: str(event[key])
+        for key in ("order_id", "correlation_id", "event_id", "type", "event_type")
+        if event.get(key) is not None
+    }
 
 
 def _trace_endpoint(base: str) -> str:

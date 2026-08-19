@@ -8,6 +8,9 @@ import asyncio
 import json
 from typing import Any
 
+from observability.logging import get_logger
+from observability.telemetry import Telemetry
+
 from .adapter import InMemoryBroker, TransientDependencyError
 from .handler import NotificationHandler
 from .persistence import NotificationRepository
@@ -25,12 +28,33 @@ class ConsumerResult:
 
 
 class NotificationConsumer:
-    def __init__(self, handler: NotificationHandler, repository: NotificationRepository, broker: InMemoryBroker) -> None:
+    def __init__(
+        self,
+        handler: NotificationHandler,
+        repository: NotificationRepository,
+        broker: InMemoryBroker,
+        telemetry: Telemetry | None = None,
+    ) -> None:
         self.handler = handler
         self.repository = repository
         self.broker = broker
+        self.telemetry = telemetry
+        self.logger = get_logger("notification-service", service_name=SERVICE_NAME)
 
-    def consume(self, event: dict[str, Any]) -> ConsumerResult:
+    def consume(self, event: dict[str, Any], headers: Any = None) -> ConsumerResult:
+        if self.telemetry is None:
+            return self._consume(event)
+        with self.telemetry.kafka_consume(topic="payments.events", event=event, headers=headers):
+            result = self._consume(event)
+            event_type = str(event.get("event_type") or event.get("type") or "unknown") if isinstance(event, dict) else "unknown"
+            self.telemetry.record_event(event_type=event_type, result=result.status)
+            if result.status in {"retried", "dlq"}:
+                self.telemetry.record_resilience(operation="retry" if result.status == "retried" else "dlq", event_type=event_type, result=result.status)
+            if isinstance(event, dict):
+                self.logger.info("notification event processed", order_id=event.get("order_id"), correlation_id=event.get("correlation_id"), result=result.status)
+            return result
+
+    def _consume(self, event: dict[str, Any]) -> ConsumerResult:
         errors = self._validate(event)
         event_id = event.get("event_id") if isinstance(event, dict) else None
         if errors:
@@ -101,7 +125,13 @@ class NotificationConsumer:
 class KafkaNotificationWorker:
     """Liga o consumidor de domínio ao Kafka real sem contaminar os testes."""
 
-    def __init__(self, bootstrap_servers: str, handler: NotificationHandler, repository: NotificationRepository) -> None:
+    def __init__(
+        self,
+        bootstrap_servers: str,
+        handler: NotificationHandler,
+        repository: NotificationRepository,
+        telemetry: Telemetry | None = None,
+    ) -> None:
         self.bootstrap_servers = bootstrap_servers
         self.handler = handler
         self.repository = repository
@@ -109,6 +139,7 @@ class KafkaNotificationWorker:
         self.consumer: Any = None
         self.task: asyncio.Task | None = None
         self.ready = False
+        self.telemetry = telemetry
 
     async def start(self) -> None:
         try:
@@ -155,7 +186,7 @@ class KafkaNotificationWorker:
                 await self.consumer.commit()
                 continue
             broker = InMemoryBroker()
-            result = NotificationConsumer(self.handler, self.repository, broker).consume(event)
+            result = NotificationConsumer(self.handler, self.repository, broker, self.telemetry).consume(event, headers=message.headers)
             for retry in broker.retries:
                 attempt = int(retry["event"]["retry_attempt"])
                 await asyncio.sleep(PRODUCTION_RETRY_DELAYS[attempt - 1])
@@ -176,7 +207,16 @@ class KafkaNotificationWorker:
             await self.consumer.commit()
 
     async def _publish(self, topic: str, event: dict[str, Any]) -> None:
-        await self.producer.send_and_wait(topic, event, key=event.get("order_id", "").encode("utf-8"))
+        if self.telemetry is None:
+            await self.producer.send_and_wait(topic, event, key=event.get("order_id", "").encode("utf-8"))
+            return
+        with self.telemetry.kafka_publish(topic=topic, event=event) as headers:
+            await self.producer.send_and_wait(
+                topic,
+                event,
+                key=event.get("order_id", "").encode("utf-8"),
+                headers=[(key, item.encode("utf-8")) for key, item in headers.items()],
+            )
 
     @staticmethod
     def normalize_event(event: dict[str, Any]) -> dict[str, Any]:

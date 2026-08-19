@@ -8,6 +8,8 @@ import json
 import os
 from typing import Any, Awaitable, Callable, Optional, Protocol, Union
 
+from observability.telemetry import Telemetry
+
 try:
     from aiokafka import AIOKafkaProducer
 except ImportError:  # pragma: no cover - a dependência é declarada no projeto.
@@ -44,16 +46,22 @@ class InMemoryProducer:
 class KafkaProducer:
     """Adaptador do AIOKafkaProducer que preserva disponibilidade observável."""
 
-    def __init__(self, bootstrap_servers: Optional[str] = None, producer_factory: Optional[Callable[..., Any]] = None) -> None:
+    def __init__(
+        self,
+        bootstrap_servers: Optional[str] = None,
+        producer_factory: Optional[Callable[..., Any]] = None,
+        telemetry: Optional[Telemetry] = None,
+    ) -> None:
         self.bootstrap_servers = bootstrap_servers or os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         self._producer_factory = producer_factory
         self._producer: Any = None
         self._available = False
         self._lock = asyncio.Lock()
+        self.telemetry = telemetry
 
     @classmethod
-    def from_environment(cls) -> "KafkaProducer":
-        return cls(os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092"))
+    def from_environment(cls, *, telemetry: Optional[Telemetry] = None) -> "KafkaProducer":
+        return cls(os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092"), telemetry=telemetry)
 
     async def start(self) -> None:
         if self._available:
@@ -95,7 +103,14 @@ class KafkaProducer:
         if self._producer is None or not self._available:
             raise ConnectionError("Kafka indisponível")
         try:
-            await self._producer.send_and_wait(topic, message, key=message.get("order_id"))
+            if self.telemetry is None:
+                await self._producer.send_and_wait(topic, message, key=message.get("order_id"))
+                return
+            with self.telemetry.kafka_publish(topic=topic, event=message) as headers:
+                encoded_headers = [(key, value.encode("utf-8")) for key, value in headers.items()]
+                await self._producer.send_and_wait(topic, message, key=message.get("order_id"), headers=encoded_headers)
+            self.telemetry.record_event(event_type=str(message.get("event_type") or message.get("type") or "unknown"), result="published")
+            self.telemetry.record_resilience(operation="outbox", event_type=str(message.get("event_type") or message.get("type") or "unknown"), result="drained")
         except Exception as exc:
             self._available = False
             raise ConnectionError("Falha ao publicar no Kafka") from exc

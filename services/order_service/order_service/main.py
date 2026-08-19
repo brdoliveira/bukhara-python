@@ -8,6 +8,8 @@ from contextlib import asynccontextmanager
 from typing import AsyncIterator, Optional
 
 from fastapi import FastAPI
+from observability.logging import configure_logging, get_logger
+from observability.telemetry import Telemetry, TelemetrySettings, configure_telemetry, instrument_fastapi
 
 from .api import register_routes
 from .persistence import OrderStore
@@ -24,9 +26,16 @@ async def _publish_outbox_forever(publisher: OutboxPublisher) -> None:
         await asyncio.sleep(1)
 
 
-def create_app(store: Optional[OrderStore] = None, producer: Optional[EventProducer] = None) -> FastAPI:
+def create_app(
+    store: Optional[OrderStore] = None,
+    producer: Optional[EventProducer] = None,
+    *,
+    telemetry: Optional[Telemetry] = None,
+) -> FastAPI:
     resolved_store = store or (OrderStore.from_environment() if os.getenv("DATABASE_URL") else OrderStore())
-    resolved_producer = producer or KafkaProducer.from_environment()
+    resolved_telemetry = telemetry or configure_telemetry(TelemetrySettings(service_name="order-service"))
+    configure_logging(service_name="order-service")
+    resolved_producer = producer or KafkaProducer.from_environment(telemetry=resolved_telemetry)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -53,7 +62,10 @@ def create_app(store: Optional[OrderStore] = None, producer: Optional[EventProdu
             resolved_store.close()
 
     app = FastAPI(title="order-service", lifespan=lifespan)
+    app.state.telemetry = resolved_telemetry
+    app.state.logger = get_logger("order-service", service_name="order-service")
     app.state.outbox_publisher = register_routes(app, resolved_store, resolved_producer)
+    instrument_fastapi(app, resolved_telemetry)
     return app
 
 

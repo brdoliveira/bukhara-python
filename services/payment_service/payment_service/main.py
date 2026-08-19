@@ -13,6 +13,8 @@ from typing import Any
 from uuid import uuid4
 
 from fastapi import FastAPI, Response, status
+from observability.logging import configure_logging, get_logger
+from observability.telemetry import Telemetry, TelemetrySettings, configure_telemetry, instrument_fastapi
 
 from .adapter import PaymentAdapter, TransientDependencyError
 from .consumer import MAX_RETRIES, PaymentConsumer, SERVICE_NAME
@@ -49,6 +51,7 @@ class PaymentRuntime:
         adapter: PaymentAdapter | None = None,
         consumer_factory: Any | None = None,
         producer_factory: Any | None = None,
+        telemetry: Telemetry | None = None,
     ) -> None:
         self.database_url = database_url or os.environ.get("DATABASE_URL", "")
         self.bootstrap_servers = bootstrap_servers or os.environ.get("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
@@ -61,6 +64,8 @@ class PaymentRuntime:
         self.producer: Any | None = None
         self._tasks: list[asyncio.Task[None]] = []
         self.started = False
+        self.telemetry = telemetry
+        self.logger = get_logger("payment-service", service_name=SERVICE_NAME)
 
     async def start(self) -> None:
         if not self.database_url:
@@ -118,7 +123,7 @@ class PaymentRuntime:
     async def _consume_loop(self) -> None:
         assert self.consumer is not None
         async for record in self.consumer:
-            await self.process(record.value)
+            await self.process(record.value, headers=record.headers)
             await self.consumer.commit()
 
     async def _publish_outbox_loop(self) -> None:
@@ -133,20 +138,37 @@ class PaymentRuntime:
             payload = row["payload"]
             if isinstance(payload, str):
                 payload = json.loads(payload)
-            await self.producer.send_and_wait(row["topic"], json.dumps(payload).encode("utf-8"), key=payload["order_id"].encode("utf-8"))
+            value = json.dumps(payload).encode("utf-8")
+            if self.telemetry is None:
+                await self.producer.send_and_wait(row["topic"], value, key=payload["order_id"].encode("utf-8"))
+            else:
+                with self.telemetry.kafka_publish(topic=row["topic"], event=payload) as headers:
+                    await self.producer.send_and_wait(row["topic"], value, key=payload["order_id"].encode("utf-8"), headers=[(key, item.encode("utf-8")) for key, item in headers.items()])
+                self.telemetry.record_resilience(operation="outbox", event_type=str(payload.get("event_type") or payload.get("type") or "unknown"), result="drained")
             await asyncio.to_thread(self.outbox.mark_published, row["id"])
         return len(pending)
 
-    async def process(self, incoming: Any) -> None:
+    async def process(self, incoming: Any, headers: Any = None) -> None:
         """Processa uma mensagem; exceções de infraestrutura não recebem commit."""
         assert self.repository is not None and self.outbox is not None
         event = PaymentConsumer._normalize(incoming)
+        if self.telemetry is not None:
+            with self.telemetry.kafka_consume(topic=INVENTORY_TOPIC, event=event if isinstance(event, dict) else {}, headers=headers):
+                await self._process_event(event)
+            return
+        await self._process_event(event)
+
+    async def _process_event(self, event: Any) -> None:
+        assert self.repository is not None and self.outbox is not None
         errors = PaymentConsumer._validate(event)
+        event_type = str(event.get("event_type") or event.get("type") or "unknown") if isinstance(event, dict) else "unknown"
         if errors:
             await asyncio.to_thread(self.outbox.enqueue, self._dlq(event, "ValidationError", 0, errors), topic=DLQ_TOPIC)
+            self._record(event, event_type, "invalid", "dlq")
             return
         assert isinstance(event, dict)
         if await asyncio.to_thread(self.repository.is_terminal, event["event_id"]):
+            self._record(event, event_type, "duplicate", None)
             return
 
         handler = PaymentHandler(self.adapter, InMemoryOutbox(), self._memory_repository())
@@ -157,10 +179,21 @@ class PaymentRuntime:
             return
         except Exception as error:
             await asyncio.to_thread(self.outbox.enqueue, self._dlq(event, type(error).__name__, self._attempt(event)), topic=DLQ_TOPIC)
+            self._record(event, event_type, "failed", "dlq")
             return
 
         outcome = "declined" if any(item["type"] == "payment.failed" for item in emitted) else "approved"
         await asyncio.to_thread(self.repository.persist_outcome, event, outcome, self._topic_events(emitted))
+        self._record(event, event_type, outcome, None)
+
+    def _record(self, event: dict[str, Any] | Any, event_type: str, result: str, resilience: str | None) -> None:
+        if self.telemetry is None:
+            return
+        self.telemetry.record_event(event_type=event_type, result=result)
+        if resilience:
+            self.telemetry.record_resilience(operation=resilience, event_type=event_type, result=result)
+        if isinstance(event, dict):
+            self.logger.info("payment event processed", order_id=event.get("order_id"), correlation_id=event.get("correlation_id"), result=result)
 
     async def _retry_or_fallback(self, event: dict[str, Any], handler: PaymentHandler, error: TransientDependencyError) -> None:
         assert self.repository is not None and self.outbox is not None
@@ -174,6 +207,7 @@ class PaymentRuntime:
                 topic=RETRY_TOPICS[attempt],
                 available_at=datetime.now(timezone.utc) + timedelta(seconds=RETRY_DELAYS[attempt]),
             )
+            self._record(event, str(event.get("event_type") or event.get("type") or "unknown"), "retried", "retry")
             return
 
         emitted = handler.fallback(event)
@@ -185,6 +219,7 @@ class PaymentRuntime:
             [*self._topic_events(emitted), (DLQ_TOPIC, dlq)],
             terminal=True,
         )
+        self._record(event, str(event.get("event_type") or event.get("type") or "unknown"), "fallback", "fallback")
 
     @staticmethod
     def _memory_repository() -> Any:
@@ -229,19 +264,22 @@ def create_app(
     postgres: DependencyProbe | None = None,
     *,
     runtime_factory: Any | None = None,
+    telemetry: Telemetry | None = None,
 ) -> FastAPI:
     """Cria FastAPI; probes injetadas evitam iniciar infraestrutura nos testes."""
 
     injected_probes = kafka is not None or postgres is not None
     kafka_probe = kafka or DependencyProbe()
     postgres_probe = postgres or DependencyProbe()
+    resolved_telemetry = telemetry or configure_telemetry(TelemetrySettings(service_name=SERVICE_NAME))
+    configure_logging(service_name=SERVICE_NAME)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         if injected_probes:
             yield
             return
-        runtime = (runtime_factory or PaymentRuntime)()
+        runtime = PaymentRuntime(telemetry=resolved_telemetry) if runtime_factory is None else runtime_factory()
         app.state.runtime = runtime
         await runtime.start()
         try:
@@ -250,6 +288,8 @@ def create_app(
             await runtime.stop()
 
     app = FastAPI(title="payment-service", lifespan=lifespan)
+    app.state.telemetry = resolved_telemetry
+    instrument_fastapi(app, resolved_telemetry)
 
     @app.get("/health")
     async def health() -> dict[str, str]:
