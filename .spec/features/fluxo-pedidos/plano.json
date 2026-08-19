@@ -1,0 +1,291 @@
+{
+  "runId": "bukhara-python-fluxo-pedidos-msz1h6m9",
+  "feature": "fluxo-pedidos",
+  "agent": "codex",
+  "modo": "paralelo",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-08-18 19:11",
+  "branchTrabalho": "spec/fluxo-pedidos",
+  "baseDir": ".spec/features/fluxo-pedidos",
+  "specDir": ".spec",
+  "repoName": "bukhara-python",
+  "logsDir": "../onp-worktrees/bukhara-python-fluxo-pedidos-logs",
+  "ondas": [
+    [
+      "faixa-1",
+      "faixa-2",
+      "faixa-3"
+    ],
+    [
+      "faixa-4",
+      "faixa-5",
+      "faixa-6"
+    ],
+    [
+      "faixa-7"
+    ]
+  ],
+  "faixas": [
+    {
+      "id": "faixa-1",
+      "branch": "spec/fluxo-pedidos-faixa-1",
+      "worktree": "../onp-worktrees/bukhara-python-fluxo-pedidos-faixa-1",
+      "tarefas": [
+        {
+          "id": "T-001",
+          "titulo": "Fundação, contratos e resiliência compartilhada",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "pyproject.toml",
+            "packages/event_bus/event_bus/__init__.py",
+            "packages/event_bus/event_bus/envelope.py",
+            "packages/event_bus/event_bus/retry.py",
+            "packages/event_bus/event_bus/inbox.py",
+            "packages/event_bus/event_bus/outbox.py",
+            "packages/event_bus/event_bus/health.py",
+            "packages/event_bus/tests/test_envelope.py",
+            "packages/event_bus/tests/test_retry.py",
+            "packages/event_bus/tests/test_inbox.py",
+            "packages/event_bus/tests/test_outbox.py",
+            "packages/event_bus/tests/test_health.py"
+          ],
+          "refs": [
+            "US-001",
+            "US-002",
+            "US-003",
+            "AC-008",
+            "AC-009",
+            "AC-010",
+            "AC-011",
+            "AC-012",
+            "AC-013"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-2",
+      "branch": "spec/fluxo-pedidos-faixa-2",
+      "worktree": "../onp-worktrees/bukhara-python-fluxo-pedidos-faixa-2",
+      "tarefas": [
+        {
+          "id": "T-002",
+          "titulo": "API e produtor do serviço de pedidos",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "medium",
+          "arquivos": [
+            "services/order_service/order_service/__init__.py",
+            "services/order_service/order_service/main.py",
+            "services/order_service/order_service/api.py",
+            "services/order_service/order_service/models.py",
+            "services/order_service/order_service/producer.py",
+            "services/order_service/order_service/persistence.py",
+            "services/order_service/order_service/outbox.py",
+            "services/order_service/migrations/env.py",
+            "services/order_service/migrations/versions/001_initial.py",
+            "services/order_service/tests/test_api.py",
+            "services/order_service/tests/test_outbox.py",
+            "services/order_service/tests/test_health.py"
+          ],
+          "refs": [
+            "US-001",
+            "US-003",
+            "AC-001",
+            "AC-002",
+            "AC-003",
+            "AC-012",
+            "AC-013"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-3",
+      "branch": "spec/fluxo-pedidos-faixa-3",
+      "worktree": "../onp-worktrees/bukhara-python-fluxo-pedidos-faixa-3",
+      "tarefas": [
+        {
+          "id": "T-003",
+          "titulo": "Consumidor do serviço de estoque",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "services/inventory_service/inventory_service/__init__.py",
+            "services/inventory_service/inventory_service/main.py",
+            "services/inventory_service/inventory_service/consumer.py",
+            "services/inventory_service/inventory_service/handler.py",
+            "services/inventory_service/inventory_service/adapter.py",
+            "services/inventory_service/inventory_service/persistence.py",
+            "services/inventory_service/inventory_service/outbox.py",
+            "services/inventory_service/migrations/env.py",
+            "services/inventory_service/migrations/versions/001_initial.py",
+            "services/inventory_service/tests/test_consumer.py",
+            "services/inventory_service/tests/test_handler.py",
+            "services/inventory_service/tests/test_persistence.py",
+            "services/inventory_service/tests/test_health.py"
+          ],
+          "refs": [
+            "US-002",
+            "US-003",
+            "AC-004",
+            "AC-005",
+            "AC-007",
+            "AC-008",
+            "AC-009",
+            "AC-010",
+            "AC-011",
+            "AC-012"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-4",
+      "branch": "spec/fluxo-pedidos-faixa-4",
+      "worktree": "../onp-worktrees/bukhara-python-fluxo-pedidos-faixa-4",
+      "tarefas": [
+        {
+          "id": "T-004",
+          "titulo": "Consumidor do serviço de pagamento",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "services/payment_service/payment_service/__init__.py",
+            "services/payment_service/payment_service/main.py",
+            "services/payment_service/payment_service/consumer.py",
+            "services/payment_service/payment_service/handler.py",
+            "services/payment_service/payment_service/adapter.py",
+            "services/payment_service/payment_service/persistence.py",
+            "services/payment_service/payment_service/outbox.py",
+            "services/payment_service/migrations/env.py",
+            "services/payment_service/migrations/versions/001_initial.py",
+            "services/payment_service/tests/test_consumer.py",
+            "services/payment_service/tests/test_handler.py",
+            "services/payment_service/tests/test_persistence.py",
+            "services/payment_service/tests/test_health.py"
+          ],
+          "refs": [
+            "US-002",
+            "US-003",
+            "AC-006",
+            "AC-007",
+            "AC-008",
+            "AC-009",
+            "AC-010",
+            "AC-011",
+            "AC-012"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-5",
+      "branch": "spec/fluxo-pedidos-faixa-5",
+      "worktree": "../onp-worktrees/bukhara-python-fluxo-pedidos-faixa-5",
+      "tarefas": [
+        {
+          "id": "T-005",
+          "titulo": "Consumidor do serviço de notificação",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "medium",
+          "arquivos": [
+            "services/notification_service/notification_service/__init__.py",
+            "services/notification_service/notification_service/main.py",
+            "services/notification_service/notification_service/consumer.py",
+            "services/notification_service/notification_service/handler.py",
+            "services/notification_service/notification_service/adapter.py",
+            "services/notification_service/notification_service/persistence.py",
+            "services/notification_service/migrations/env.py",
+            "services/notification_service/migrations/versions/001_initial.py",
+            "services/notification_service/tests/test_consumer.py",
+            "services/notification_service/tests/test_handler.py",
+            "services/notification_service/tests/test_persistence.py",
+            "services/notification_service/tests/test_health.py"
+          ],
+          "refs": [
+            "US-002",
+            "US-003",
+            "AC-006",
+            "AC-008",
+            "AC-009",
+            "AC-010",
+            "AC-011",
+            "AC-012"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-6",
+      "branch": "spec/fluxo-pedidos-faixa-6",
+      "worktree": "../onp-worktrees/bukhara-python-fluxo-pedidos-faixa-6",
+      "tarefas": [
+        {
+          "id": "T-006",
+          "titulo": "Infraestrutura local e teste da saga",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "docker-compose.yml",
+            "Dockerfile",
+            ".dockerignore",
+            ".env.example",
+            "scripts/create-topics.sh",
+            "scripts/init-databases.sql",
+            "tests/integration/test_order_saga.py",
+            "tests/integration/test_retry_and_dlq.py",
+            "tests/integration/test_outbox_recovery.py"
+          ],
+          "refs": [
+            "US-001",
+            "US-002",
+            "US-003",
+            "AC-001",
+            "AC-004",
+            "AC-005",
+            "AC-006",
+            "AC-007",
+            "AC-008",
+            "AC-009",
+            "AC-010",
+            "AC-011",
+            "AC-012",
+            "AC-013"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-7",
+      "branch": "spec/fluxo-pedidos-faixa-7",
+      "worktree": "../onp-worktrees/bukhara-python-fluxo-pedidos-faixa-7",
+      "tarefas": [
+        {
+          "id": "T-007",
+          "titulo": "Documentação operacional",
+          "modelo": "gpt-5.6-luna",
+          "esforco": "low",
+          "arquivos": [
+            "README.md",
+            "docs/events.md",
+            "docs/resilience.md"
+          ],
+          "refs": [
+            "US-001",
+            "US-002",
+            "US-003",
+            "AC-008",
+            "AC-009",
+            "AC-012"
+          ]
+        }
+      ]
+    }
+  ],
+  "sequenciais": [],
+  "concluidas": [],
+  "avisos": []
+}

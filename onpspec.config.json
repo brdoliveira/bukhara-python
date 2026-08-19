@@ -1,0 +1,14 @@
+{
+  "testCommand": "py -3.12 -B -m pytest -q -p no:cacheprovider",
+  "reporter": "exitcode",
+  "testGlobs": [
+    "test/**",
+    "tests/**",
+    "services/**/tests/**",
+    "packages/**/tests/**"
+  ],
+  "srcGlobs": [
+    "services/**/*.py",
+    "packages/**/*.py"
+  ]
+}
