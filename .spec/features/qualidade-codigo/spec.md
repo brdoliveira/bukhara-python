@@ -1,7 +1,7 @@
 # Spec: Documentação e qualidade do código
 
 > feature: qualidade-codigo
-> status: em-implementacao
+> status: auditada
 
 ## Contexto
 

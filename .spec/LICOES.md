@@ -21,7 +21,10 @@ Corroboradas em múltiplas features. Aplique como guia.
 
 Vistas em uma feature só. Registradas, não confiadas.
 
-_nenhuma_
+### L-003 — Rerodar o verify de todas as features afetadas depois de alterar a suíte ou a configuração global de testes, antes da auditoria final.
+- sinal: `VERIFY_OBSOLETO` · recorrência: 1 feature(s) · penalidades: 0
+- features: observabilidade
+- última evidência: — (observabilidade, 2026-08-19T20:40:12.407Z)
 
 ## Quarentena — aplicadas e falharam, ignorar
 

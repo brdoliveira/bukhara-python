@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "proximoId": 3,
+  "proximoId": 4,
   "licoes": [
     {
       "id": "L-001",
@@ -61,6 +61,29 @@
       "penalidades": 0,
       "criadaEm": "2026-08-19T05:52:28.464Z",
       "ultimaVez": "2026-08-19T18:46:11.764Z"
+    },
+    {
+      "id": "L-003",
+      "texto": "Rerodar o verify de todas as features afetadas depois de alterar a suíte ou a configuração global de testes, antes da auditoria final.",
+      "chave": "VERIFY_OBSOLETO::rerodar o verify de todas as features afetadas depois de alterar a suite ou a configuracao global de testes antes da auditoria final",
+      "sinal": "VERIFY_OBSOLETO",
+      "escopo": null,
+      "status": "candidata",
+      "recorrencia": 1,
+      "features": [
+        "observabilidade"
+      ],
+      "evidencias": [
+        {
+          "fonte": "—",
+          "feature": "observabilidade",
+          "quando": "2026-08-19T20:40:12.407Z",
+          "gitRev": "0bb2e80"
+        }
+      ],
+      "penalidades": 0,
+      "criadaEm": "2026-08-19T20:40:12.407Z",
+      "ultimaVez": "2026-08-19T20:40:12.407Z"
     }
   ]
 }
