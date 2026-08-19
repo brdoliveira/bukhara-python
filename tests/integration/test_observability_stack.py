@@ -43,8 +43,8 @@ def test_lgtm_stack_is_available_for_otlp_http_spec_ac_019() -> None:
 
     assert "image: grafana/otel-lgtm:0.30.0" in lgtm
     assert '"${GRAFANA_PORT:-3000}:3000"' in lgtm
-    assert '"${OTEL_GRPC_PORT:-4317}:4317"' in lgtm
-    assert '"${OTEL_HTTP_PORT:-4318}:4318"' in lgtm
+    assert '"${OTEL_GRPC_PORT:-14317}:4317"' in lgtm
+    assert '"${OTEL_HTTP_PORT:-14318}:4318"' in lgtm
     assert "dashboards.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/order-saga.yaml:ro" in lgtm
     assert "order-saga.json:/otel-lgtm/grafana/conf/provisioning/dashboards/custom/order-saga.json:ro" in lgtm
 
