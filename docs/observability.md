@@ -12,6 +12,8 @@ docker compose up --build
 
 O Grafana fica em [http://localhost:3000](http://localhost:3000), com as credenciais locais padrão `admin` / `admin`. No primeiro acesso, o Grafana pode pedir a troca da senha.
 
+Para clientes executados no host, os coletores OTLP ficam em `localhost:14317` (gRPC) e `http://localhost:14318` (HTTP). Entre os containers, os microsserviços usam `http://otel-lgtm:4318`.
+
 O dashboard **Order Saga / Saga da encomenda** é provisionado automaticamente pela stack. Abra-o em Dashboards para acompanhar, por serviço, taxa de processamento, erros, duração, eventos, retries e mensagens na DLQ. A partir dos painéis, use os links de investigação para abrir os logs no Loki e os traces no Tempo.
 
 Para gerar uma operação de exemplo:
@@ -19,7 +21,8 @@ Para gerar uma operação de exemplo:
 ```bash
 curl -X POST http://localhost:8000/orders \
   -H "Content-Type: application/json" \
-  -d '{"customer_id":"demo","items":[{"sku":"book","quantity":1}]}'
+  -H "Idempotency-Key: observability-demo-1" \
+  -d '{"items":[{"product_id":"book","quantity":1,"price":"10.00"}]}'
 ```
 
 Consulte [`docs/events.md`](events.md) para o contrato da requisição se o payload do ambiente tiver mudado.
