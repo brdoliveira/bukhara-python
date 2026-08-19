@@ -30,4 +30,4 @@ Kafka e PostgreSQL têm healthchecks no Compose. Em caso de falha, examine `dock
 
 ## Limites do MVP
 
-O fluxo oferece processamento efetivamente uma vez por Inbox/Outbox e idempotência, não uma garantia global de exatamente uma vez. Estoque, adquirente e entrega de notificação são adaptadores simulados; Kafka e PostgreSQL são integrações reais. Kubernetes, autenticação e observabilidade distribuída estão fora do escopo.
+O fluxo oferece processamento efetivamente uma vez por Inbox/Outbox e idempotência, não uma garantia global de exatamente uma vez. Estoque, adquirente e entrega de notificação são adaptadores simulados; Kafka e PostgreSQL são integrações reais. A observabilidade distribuída usa um perfil LGTM local para estudo; Kubernetes, autenticação e uma topologia de observabilidade de produção estão fora do escopo.

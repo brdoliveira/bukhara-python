@@ -1,0 +1,22 @@
+{
+  "feature": "documentacao-arquitetura",
+  "timestamp": "2026-08-19T18:47:36.759Z",
+  "gitRev": "2cf4fad",
+  "command": "py -3.12 -B -m pytest -q -p no:cacheprovider",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-022": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-023": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}
