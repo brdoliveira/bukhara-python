@@ -9,6 +9,8 @@ from typing import Callable
 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from observability.logging import configure_logging
+from observability.telemetry import Telemetry, TelemetrySettings, configure_telemetry, instrument_fastapi
 
 from .adapter import LoggingNotificationAdapter
 from .consumer import KafkaNotificationWorker
@@ -39,15 +41,20 @@ def create_app(
     kafka: DependencyProbe | CallableProbe | None = None,
     postgres: DependencyProbe | CallableProbe | None = None,
     worker: KafkaNotificationWorker | None = None,
+    *,
+    telemetry: Telemetry | None = None,
 ) -> FastAPI:
     database_url = os.getenv("DATABASE_URL")
     repository = PostgresNotificationRepository(database_url) if database_url else NotificationRepository()
+    resolved_telemetry = telemetry or configure_telemetry(TelemetrySettings(service_name="notification-service"))
+    configure_logging(service_name="notification-service")
     runtime_worker = worker
     if runtime_worker is None and os.getenv("KAFKA_BOOTSTRAP_SERVERS"):
         runtime_worker = KafkaNotificationWorker(
             os.environ["KAFKA_BOOTSTRAP_SERVERS"],
             NotificationHandler(LoggingNotificationAdapter(), repository),
             repository,
+            resolved_telemetry,
         )
 
     @asynccontextmanager
@@ -61,6 +68,8 @@ def create_app(
                 await runtime_worker.stop()
 
     app = FastAPI(title="notification-service", lifespan=lifespan)
+    app.state.telemetry = resolved_telemetry
+    instrument_fastapi(app, resolved_telemetry)
     kafka_probe = kafka or CallableProbe(lambda: bool(runtime_worker and runtime_worker.ready))
     postgres_probe = postgres or CallableProbe(repository.is_available)
 

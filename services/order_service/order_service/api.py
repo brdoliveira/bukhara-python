@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from uuid import uuid4
 
-from fastapi import FastAPI, Header, HTTPException, Response, status
+from fastapi import FastAPI, Header, HTTPException, Request, Response, status
 
 from .models import CreateOrderRequest, OrderAccepted, order_payload
 from .producer import EventProducer, OutboxPublisher
@@ -15,9 +15,16 @@ def register_routes(app: FastAPI, store: OrderStore, producer: EventProducer) ->
     publisher = OutboxPublisher(store, producer)
 
     @app.post("/orders", response_model=OrderAccepted, status_code=status.HTTP_202_ACCEPTED)
-    async def create_order(request: CreateOrderRequest, idempotency_key: str = Header(..., alias="Idempotency-Key")) -> OrderAccepted:
+    async def create_order(
+        request: CreateOrderRequest,
+        http_request: Request,
+        idempotency_key: str = Header(..., alias="Idempotency-Key"),
+    ) -> OrderAccepted:
         candidate = StoredOrder(
-            order_id=str(uuid4()), correlation_id=str(uuid4()), payload=order_payload(request.items), event_id=str(uuid4()),
+            order_id=str(uuid4()),
+            correlation_id=getattr(http_request.state, "correlation_id", str(uuid4())),
+            payload=order_payload(request.items),
+            event_id=str(uuid4()),
         )
         try:
             stored, created = store.create_order_with_outbox(candidate, idempotency_key)
@@ -29,6 +36,12 @@ def register_routes(app: FastAPI, store: OrderStore, producer: EventProducer) ->
             except ConnectionError:
                 # A transação já confirmou. O recuperador publicará depois.
                 pass
+        app.state.logger.info(
+            "order accepted",
+            order_id=stored.order_id,
+            correlation_id=stored.correlation_id,
+            event_type="order.created",
+        )
         return OrderAccepted(order_id=stored.order_id, correlation_id=stored.correlation_id)
 
     @app.get("/health")
