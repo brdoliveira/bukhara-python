@@ -237,6 +237,7 @@ node /path/to/onp-spec-driven/scripts/onp-spec.mjs audit --ci
 
 ## Documentação complementar
 
+- [Referência de código](docs/code-reference.md)
 - [Contrato operacional de eventos](docs/events.md)
 - [Retry, DLQ, saúde e limites do MVP](docs/resilience.md)
 - [Runbook de observabilidade](docs/observability.md)
