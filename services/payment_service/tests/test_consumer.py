@@ -94,3 +94,19 @@ def test_ac_011_evento_invalido_e_isolado_na_dlq_sem_deter_consumidor__spec_AC_0
 
     assert broker.dlq[0]["validation_errors"]
     assert len(adapter.charges) == 1
+
+
+def test_pagamento_terminal_emite_compensacao_uma_vez_e_deduplica__spec_AC_029():
+    """@spec:AC-029 Falha terminal emite compensação sem repetir o efeito."""
+    service, repository, _, broker = consumer([TransientDependencyError()] * 4)
+    message = event()
+
+    for _ in range(3):
+        assert service.consume(message).status == "retried"
+        message = broker.retries[-1]["event"]
+    assert service.consume(message).status == "dlq"
+    assert service.consume(message).status == "dlq"
+
+    assert repository.has_terminal_failure("evt-1")
+    assert repository.fallback_count("evt-1") == 1
+    assert [item["type"] for item in broker.published] == ["payment.failed", "inventory.release.requested"]

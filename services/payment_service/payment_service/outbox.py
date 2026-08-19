@@ -9,6 +9,8 @@ from uuid import uuid4
 
 
 class InMemoryOutbox:
+    """Outbox determinística para unit tests e decisões de pagamento locais."""
+
     def __init__(self) -> None:
         self._events: list[dict[str, Any]] = []
 
@@ -21,6 +23,7 @@ class InMemoryOutbox:
         payload: dict[str, Any],
         causation_id: str | None = None,
     ) -> dict[str, Any]:
+        """Adiciona um envelope de domínio e devolve uma cópia independente."""
         event = {
             "event_id": str(uuid4()),
             "type": event_type,
@@ -37,6 +40,7 @@ class InMemoryOutbox:
         return deepcopy(event)
 
     def pending(self) -> list[dict[str, Any]]:
+        """Lista cópias dos eventos que ainda aguardam publicação."""
         return deepcopy(self._events)
 
 

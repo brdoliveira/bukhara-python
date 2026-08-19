@@ -14,6 +14,8 @@ from uuid import uuid4
 
 
 class PaymentRepository:
+    """Inbox em memória que preserva deduplicação e falha terminal nos testes."""
+
     def __init__(self) -> None:
         self._processed: set[str] = set()
         self._terminal_failures: set[str] = set()
