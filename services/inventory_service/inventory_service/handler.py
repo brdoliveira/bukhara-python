@@ -10,12 +10,15 @@ from .persistence import InsufficientStockError, InventoryRepository
 
 
 class InventoryHandler:
+    """Converte eventos de pedido em reservas, liberações e eventos da Outbox."""
+
     def __init__(self, adapter: InventoryAdapter, outbox: Outbox, repository: InventoryRepository) -> None:
         self.adapter = adapter
         self.outbox = outbox
         self.repository = repository
 
     def handle(self, event: dict[str, Any]) -> list[dict[str, Any]]:
+        """Aplica a regra de negócio correspondente ao tipo do evento recebido."""
         if event["type"] == "order.created":
             return self._reserve(event)
         if event["type"] == "inventory.release.requested":

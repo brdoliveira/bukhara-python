@@ -18,6 +18,8 @@ SUPPORTED_EVENT_TYPES = {"order.created", "inventory.release.requested"}
 
 @dataclass(frozen=True)
 class ConsumerResult:
+    """Resultado observável de uma tentativa de consumo de evento."""
+
     status: str
 
 
@@ -40,6 +42,7 @@ class InventoryConsumer:
         self.retry_delays = retry_delays
 
     def consume(self, event: dict[str, Any]) -> ConsumerResult:
+        """Processa um evento uma vez, retornando o estado final da tentativa."""
         event = self.normalize(event)
         errors = self._validate(event)
         event_id = event.get("event_id") if isinstance(event, dict) else None
@@ -88,6 +91,7 @@ class InventoryConsumer:
             return ConsumerResult("dlq")
 
     def _retry_or_dlq(self, event: dict[str, Any], error: TransientDependencyError) -> ConsumerResult:
+        """Agenda nova tentativa ou executa fallback terminal exatamente uma vez."""
         attempt = self._attempt(event)
         if attempt < MAX_RETRIES:
             retry = deepcopy(event)

@@ -14,6 +14,8 @@ from uuid import uuid4
 
 
 class Outbox(Protocol):
+    """Contrato para persistir eventos derivados na mesma transação do estoque."""
+
     def add(
         self,
         event_type: str,
@@ -49,6 +51,8 @@ def event_for_outbox(
 
 
 class InMemoryOutbox:
+    """Outbox determinística que torna os eventos pendentes observáveis em testes."""
+
     def __init__(self) -> None:
         self._events: list[dict[str, Any]] = []
 

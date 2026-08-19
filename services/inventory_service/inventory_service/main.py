@@ -42,10 +42,13 @@ class DependencyProbe:
 
 
 class AsyncProbe(Protocol):
+    """Contrato assíncrono para verificar dependências do runtime."""
+
     async def check(self) -> bool: ...
 
 
 async def probe_available(probe: Any) -> bool:
+    """Converte probes síncronos ou assíncronos em uma resposta segura de prontidão."""
     try:
         check = getattr(probe, "check", None)
         if check is not None:
@@ -56,6 +59,8 @@ async def probe_available(probe: Any) -> bool:
 
 
 class PostgresReadinessProbe:
+    """Verifica que o PostgreSQL aceita uma consulta curta de disponibilidade."""
+
     def __init__(self, database_url: str) -> None:
         self.database_url = database_url.replace("postgresql+psycopg://", "postgresql://", 1)
 
@@ -72,6 +77,8 @@ class PostgresReadinessProbe:
 
 
 class KafkaReadinessProbe:
+    """Verifica metadados Kafka sem depender do loop de consumo estar ativo."""
+
     def __init__(self, bootstrap_servers: str, runtime: "KafkaInventoryRuntime | None" = None) -> None:
         self.bootstrap_servers = bootstrap_servers
         self.runtime = runtime
@@ -138,6 +145,8 @@ class KafkaDispatchBroker(InMemoryBroker):
 
 
 class KafkaInventoryRuntime:
+    """Coordena PostgreSQL, Kafka, Outbox e lifecycle do worker de estoque."""
+
     def __init__(
         self,
         *,
@@ -159,6 +168,7 @@ class KafkaInventoryRuntime:
         self.logger = get_logger("inventory-service", service_name=SERVICE_NAME)
 
     async def start(self) -> None:
+        """Inicializa dependências e inicia o loop de consumo uma única vez."""
         from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 
         await asyncio.to_thread(self.repository.initialize)
@@ -180,6 +190,7 @@ class KafkaInventoryRuntime:
         await self.publish_pending_outbox()
 
     async def stop(self) -> None:
+        """Interrompe o worker e fecha recursos de forma segura e idempotente."""
         self._running = False
         if self._task:
             self._task.cancel()
@@ -234,6 +245,7 @@ class KafkaInventoryRuntime:
         return result.status
 
     async def publish_pending_outbox(self) -> int:
+        """Publica eventos duráveis pendentes e confirma cada um após o envio."""
         assert self.producer is not None
         events = await asyncio.to_thread(self.repository.pending_outbox)
         for event in events:
@@ -265,6 +277,7 @@ def create_app(
     runtime: KafkaInventoryRuntime | None = None,
     telemetry: Telemetry | None = None,
 ) -> FastAPI:
+    """Monta a aplicação HTTP com probes e, em produção, runtime Kafka gerenciado."""
     database_url = os.getenv("DATABASE_URL", "postgresql://inventory:inventory@localhost:5432/inventory")
     bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
     initial_stock = json.loads(os.getenv("INVENTORY_INITIAL_STOCK", "{}"))

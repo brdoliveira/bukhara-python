@@ -30,9 +30,11 @@ class InventoryRepository:
         yield
 
     def available(self, sku: str) -> int:
+        """Retorna a quantidade disponível do SKU, ou zero quando ausente."""
         return self._stock.get(sku, 0)
 
     def reserve(self, order_id: str, items: list[dict[str, Any]]) -> None:
+        """Reserva todos os itens de uma vez ou levanta erro sem alterar o estoque."""
         if order_id in self._reservations:
             return
         requested = _requested_items(items)
@@ -44,6 +46,7 @@ class InventoryRepository:
         self._reservations[order_id] = deepcopy(items)
 
     def release(self, order_id: str) -> bool:
+        """Desfaz uma reserva existente e informa se havia algo para liberar."""
         items = self._reservations.pop(order_id, None)
         if items is None:
             return False
@@ -52,12 +55,15 @@ class InventoryRepository:
         return True
 
     def was_processed(self, event_id: str) -> bool:
+        """Indica se a Inbox já confirmou o processamento do evento."""
         return event_id in self._processed
 
     def mark_processed(self, event_id: str) -> None:
+        """Registra o evento na Inbox para impedir uma nova aplicação."""
         self._processed.add(event_id)
 
     def mark_terminal_failure(self, event_id: str) -> bool:
+        """Reivindica atomamente o fallback terminal de um evento."""
         if event_id in self._terminal_failures:
             return False
         self._terminal_failures.add(event_id)
@@ -224,12 +230,14 @@ class PostgresInventoryRepository:
         return int(row[0]) if row else 0
 
     def add_outbox(self, event: dict[str, Any], *, topic: str) -> None:
+        """Persiste um evento de saída antes de qualquer publicação Kafka."""
         self._execute(
             "INSERT INTO inventory_outbox (event_id, topic, event) VALUES (%s, %s, %s::jsonb) ON CONFLICT (event_id) DO NOTHING",
             (event["event_id"], topic, json.dumps(event)),
         ).close()
 
     def pending_outbox(self) -> list[dict[str, Any]]:
+        """Lista eventos de saída ainda não confirmados pelo produtor."""
         with self._execute("SELECT event FROM inventory_outbox WHERE published_at IS NULL ORDER BY created_at") as cursor:
             rows = cursor.fetchall()
         return [row[0] if isinstance(row[0], dict) else json.loads(row[0]) for row in rows]
