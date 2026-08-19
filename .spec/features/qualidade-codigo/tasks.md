@@ -37,8 +37,7 @@
 - Esforço: alto
 - Notas: cobrir worker Kafka, normalização de envelopes, retry, fallback, DLQ e stop seguro.
 
-## T-018 — Publicar referência e ativar gate de cobertura [pendente]
-
+## T-018 — Publicar referência e ativar gate de cobertura [concluida]
 - Refs: US-008, US-009, AC-024, AC-025, AC-031
 - Arquivos: pyproject.toml, README.md, docs/code-reference.md, tests/integration/test_code_documentation.py, tests/integration/test_quality_gate.py
 - Modelo: gpt-5.6-luna
