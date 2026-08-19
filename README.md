@@ -206,17 +206,64 @@ O dashboard **Order Saga / Saga da encomenda** é provisionado automaticamente n
 
 ## Testes e auditoria da especificação
 
-Execute toda a suíte:
+### Resultado atual
+
+A suíte é hermética: usa doubles para Kafka, PostgreSQL, exportadores OTLP e
+integrações externas, portanto não exige Docker para ser executada.
+
+| Indicador | Resultado |
+|---|---:|
+| Testes automatizados | **111 aprovados** |
+| Cobertura do código de produção | **85,84%** |
+| Gate mínimo de cobertura | **85%** |
+| Critérios de aceite auditados | **31/31** |
+
+O gate considera somente os seis diretórios de produção em `packages/` e
+`services/`; testes e migrações não entram no cálculo.
+
+### Escopo da suíte
+
+| Área | Comportamentos exercitados |
+|---|---|
+| `event_bus` | Envelope, validação, Inbox, Outbox, retry, fallback, DLQ e readiness. |
+| `observability` | Logs estruturados, traces, métricas, contexto Kafka, OTLP degradado e shutdown. |
+| `order_service` | Idempotência HTTP, persistência, publicação e recuperação da Outbox. |
+| `inventory_service` | Reserva/compensação, lifecycle, deduplicação, retry e transações PostgreSQL. |
+| `payment_service` | Aprovação/recusa, compensação, consumo idempotente, retry e Outbox. |
+| `notification_service` | Consumo, persistência, entrega idempotente, retry e recuperação. |
+| Integração | Documentação, arquitetura, observabilidade e configuração do gate. |
+
+### Executar os testes
+
+Instale as dependências de desenvolvimento e execute toda a suíte:
 
 ```bash
+py -3.12 -m pip install -e ".[dev]"
 py -3.12 -B -m pytest -q -p no:cacheprovider
 ```
+
+O segundo comando já mede a cobertura e falha automaticamente abaixo de 85%.
+Para executar uma parte específica sem aplicar o gate global:
+
+```bash
+py -3.12 -B -m pytest -q -o addopts="" packages/event_bus/tests
+py -3.12 -B -m pytest -q -o addopts="" packages/observability/tests
+py -3.12 -B -m pytest -q -o addopts="" services/order_service/tests
+py -3.12 -B -m pytest -q -o addopts="" services/inventory_service/tests
+py -3.12 -B -m pytest -q -o addopts="" services/payment_service/tests
+py -3.12 -B -m pytest -q -o addopts="" services/notification_service/tests
+py -3.12 -B -m pytest -q -o addopts="" tests/integration
+```
+
+### Auditar a especificação
 
 Verifique os critérios de aceite e o alinhamento entre especificação, tarefas e testes:
 
 ```bash
 node /path/to/onp-spec-driven/scripts/onp-spec.mjs verify fluxo-pedidos
 node /path/to/onp-spec-driven/scripts/onp-spec.mjs verify observabilidade
+node /path/to/onp-spec-driven/scripts/onp-spec.mjs verify documentacao-arquitetura
+node /path/to/onp-spec-driven/scripts/onp-spec.mjs verify qualidade-codigo
 node /path/to/onp-spec-driven/scripts/onp-spec.mjs audit --ci
 ```
 
