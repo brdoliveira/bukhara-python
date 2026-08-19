@@ -19,27 +19,35 @@ from .persistence import OrderStore
 
 
 class EventProducer(Protocol):
+    """Define o contrato de publicação e de prontidão para eventos de pedidos."""
+
     def publish(self, topic: str, message: dict[str, Any]) -> Union[None, Awaitable[None]]: ...
     def is_available(self) -> bool: ...
 
 
 class InMemoryProducer:
+    """Produtor determinístico em memória usado em testes e desenvolvimento local."""
+
     def __init__(self, available: bool = True) -> None:
         self.available = available
         self.messages: list[tuple[str, dict[str, Any]]] = []
 
     def publish(self, topic: str, message: dict[str, Any]) -> None:
+        """Armazena uma mensagem ou informa indisponibilidade simulada."""
         if not self.available:
             raise ConnectionError("Kafka indisponível")
         self.messages.append((topic, message))
 
     def is_available(self) -> bool:
+        """Informa a disponibilidade configurada para o double de produtor."""
         return self.available
 
     async def start(self) -> None:
+        """Implementa o ciclo de vida assíncrono sem abrir conexões."""
         return None
 
     async def stop(self) -> None:
+        """Implementa o encerramento assíncrono sem recursos a liberar."""
         return None
 
 
@@ -61,9 +69,11 @@ class KafkaProducer:
 
     @classmethod
     def from_environment(cls, *, telemetry: Optional[Telemetry] = None) -> "KafkaProducer":
+        """Cria o adaptador Kafka com o endereço configurado para o runtime."""
         return cls(os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092"), telemetry=telemetry)
 
     async def start(self) -> None:
+        """Inicia a conexão Kafka uma vez e expõe falhas como indisponibilidade."""
         if self._available:
             return
         async with self._lock:
@@ -92,12 +102,14 @@ class KafkaProducer:
             self._available = True
 
     async def stop(self) -> None:
+        """Encerra a conexão Kafka atual e torna o adaptador não pronto."""
         producer, self._producer = self._producer, None
         self._available = False
         if producer is not None:
             await producer.stop()
 
     async def publish(self, topic: str, message: dict[str, Any]) -> None:
+        """Publica uma mensagem, incluindo telemetria, ou sinaliza falha de conexão."""
         if not self._available:
             await self.start()
         if self._producer is None or not self._available:
@@ -116,10 +128,13 @@ class KafkaProducer:
             raise ConnectionError("Falha ao publicar no Kafka") from exc
 
     def is_available(self) -> bool:
+        """Informa se a conexão Kafka foi iniciada e permanece utilizável."""
         return self._available
 
 
 class OutboxPublisher:
+    """Drena eventos pendentes e os confirma somente após publicar no produtor."""
+
     def __init__(self, store: OrderStore, producer: EventProducer) -> None:
         self.store = store
         self.producer = producer

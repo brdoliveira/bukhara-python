@@ -9,6 +9,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class OrderItem(BaseModel):
+    """Representa uma linha válida de um pedido recebido pela API."""
+
     model_config = ConfigDict(extra="forbid")
 
     product_id: str = Field(min_length=1)
@@ -17,12 +19,16 @@ class OrderItem(BaseModel):
 
 
 class CreateOrderRequest(BaseModel):
+    """Define o corpo aceito para a criação de um pedido."""
+
     model_config = ConfigDict(extra="forbid")
 
     items: list[OrderItem] = Field(min_length=1)
 
 
 class OrderAccepted(BaseModel):
+    """Descreve a aceitação assíncrona de um pedido persistido."""
+
     order_id: str
     status: str = "accepted"
     correlation_id: str

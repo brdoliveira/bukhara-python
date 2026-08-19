@@ -1,5 +1,6 @@
 """Provas da entrada HTTP de pedidos."""
 
+import ast
 from pathlib import Path
 import sys
 
@@ -60,3 +61,21 @@ def test_invalid_order_is_rejected_before_messaging_spec_ac_003():
     fields = {error["loc"][-1] for error in response.json()["detail"]}
     assert {"product_id", "quantity", "price"}.issubset(fields)
     assert producer.messages == []
+
+
+def test_public_order_service_apis_are_documented__spec_AC_024() -> None:
+    """@spec:AC-024 Módulos e APIs públicas do serviço explicam seu contrato."""
+    package = Path(__file__).parents[1] / "order_service"
+    expected_modules = ("api.py", "main.py", "models.py", "outbox.py", "persistence.py", "producer.py")
+
+    missing: list[str] = []
+    for filename in expected_modules:
+        source = ast.parse((package / filename).read_text(encoding="utf-8"))
+        if not ast.get_docstring(source):
+            missing.append(filename)
+        for definition in source.body:
+            if isinstance(definition, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)) and not definition.name.startswith("_"):
+                if not ast.get_docstring(definition):
+                    missing.append(f"{filename}:{definition.name}")
+
+    assert missing == []
