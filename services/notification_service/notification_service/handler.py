@@ -9,6 +9,8 @@ from .persistence import NotificationRepository
 
 
 class NotificationHandler:
+    """Aplica a regra de envio para pagamentos aprovados e seu fallback seguro."""
+
     def __init__(self, adapter: NotificationAdapter, repository: NotificationRepository) -> None:
         self.adapter = adapter
         self.repository = repository

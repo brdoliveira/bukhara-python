@@ -20,6 +20,8 @@ from .persistence import NotificationRepository, PostgresNotificationRepository
 
 @dataclass
 class DependencyProbe:
+    """Double simples que expõe a disponibilidade de uma dependência do serviço."""
+
     available: bool = True
 
     def is_available(self) -> bool:
@@ -27,6 +29,8 @@ class DependencyProbe:
 
 
 class CallableProbe:
+    """Adapta uma verificação arbitrária ao contrato de prontidão da aplicação."""
+
     def __init__(self, check: Callable[[], bool]) -> None:
         self.check = check
 
@@ -44,6 +48,7 @@ def create_app(
     *,
     telemetry: Telemetry | None = None,
 ) -> FastAPI:
+    """Cria a aplicação HTTP e gerencia o ciclo de vida opcional do worker Kafka."""
     database_url = os.getenv("DATABASE_URL")
     repository = PostgresNotificationRepository(database_url) if database_url else NotificationRepository()
     resolved_telemetry = telemetry or configure_telemetry(TelemetrySettings(service_name="notification-service"))

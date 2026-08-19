@@ -84,3 +84,22 @@ def test_ac_011_evento_invalido_e_isolado_na_dlq_sem_deter_consumidor__spec_AC_0
 
     assert broker.dlq[0]["validation_errors"]
     assert adapter.sent == ["order-1"]
+
+
+@pytest.mark.parametrize("_spec_tag", ["@spec:AC-030"], ids=str)
+def test_ac_030_consumidor_e_idempotente_reexecuta_falhas_transitorias_e_isola_eventos_invalidos__spec_AC_030(_spec_tag):
+    service, repository, adapter, broker = consumer([TransientDependencyError()] * 4)
+    message = event()
+
+    for _ in range(3):
+        assert service.consume(message).status == "retried"
+        message = broker.retries[-1]["event"]
+    assert service.consume(message).status == "dlq"
+    assert service.consume(message).status == "dlq"
+    assert service.consume({"event_id": "bad", "type": "payment.approved"}).status == "invalid"
+
+    assert repository.fallback_count("evt-1") == 1
+    assert adapter.fallbacks == ["order-1"]
+    assert len(broker.dlq) == 2
+    assert broker.dlq[0]["attempts"] == 3
+    assert broker.dlq[1]["validation_errors"]

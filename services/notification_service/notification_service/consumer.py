@@ -24,10 +24,14 @@ PRODUCTION_RETRY_DELAYS = (1, 5, 15)
 
 @dataclass(frozen=True)
 class ConsumerResult:
+    """Representa o resultado observável do processamento de um evento."""
+
     status: str
 
 
 class NotificationConsumer:
+    """Valida pagamentos aprovados e coordena entrega, retry, DLQ e idempotência."""
+
     def __init__(
         self,
         handler: NotificationHandler,
@@ -167,17 +171,21 @@ class KafkaNotificationWorker:
         self.task = asyncio.create_task(self._run(), name="notification-kafka-consumer")
 
     async def stop(self) -> None:
+        """Encerra o loop e as conexões uma única vez, mesmo em chamadas repetidas."""
         self.ready = False
-        if self.task:
-            self.task.cancel()
+        task, self.task = self.task, None
+        consumer, self.consumer = self.consumer, None
+        producer, self.producer = self.producer, None
+        if task:
+            task.cancel()
             try:
-                await self.task
+                await task
             except asyncio.CancelledError:
                 pass
-        if self.consumer:
-            await self.consumer.stop()
-        if self.producer:
-            await self.producer.stop()
+        if consumer:
+            await consumer.stop()
+        if producer:
+            await producer.stop()
 
     async def _run(self) -> None:
         async for message in self.consumer:

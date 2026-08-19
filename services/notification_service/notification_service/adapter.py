@@ -15,6 +15,8 @@ class TransientDependencyError(RuntimeError):
 
 @dataclass
 class InMemoryBroker:
+    """Registra acknowledgements, retries e DLQ para o consumidor e seus testes."""
+
     retries: list[dict[str, Any]] = field(default_factory=list)
     dlq: list[dict[str, Any]] = field(default_factory=list)
     acknowledged: list[str] = field(default_factory=list)
@@ -36,6 +38,8 @@ class InMemoryBroker:
 
 
 class NotificationAdapter:
+    """Porta de envio de notificações e do fallback de falhas terminais."""
+
     def __init__(self, *, send_failures: Iterable[Exception] = ()) -> None:
         self._send_failures = list(send_failures)
         self.sent_notifications: list[dict[str, str]] = []
