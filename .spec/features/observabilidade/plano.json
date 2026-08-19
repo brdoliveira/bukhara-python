@@ -1,0 +1,137 @@
+{
+  "runId": "bukhara-python-observabilidade-mszcuqqx",
+  "feature": "observabilidade",
+  "agent": "codex",
+  "modo": "paralelo",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-08-19 00:30",
+  "branchTrabalho": "spec/observabilidade",
+  "baseDir": ".spec/features/observabilidade",
+  "specDir": ".spec",
+  "repoName": "bukhara-python",
+  "logsDir": "../onp-worktrees/bukhara-python-observabilidade-logs",
+  "ondas": [
+    [
+      "faixa-1",
+      "faixa-2",
+      "faixa-3"
+    ]
+  ],
+  "faixas": [
+    {
+      "id": "faixa-1",
+      "branch": "spec/observabilidade-faixa-1",
+      "worktree": "../onp-worktrees/bukhara-python-observabilidade-faixa-1",
+      "tarefas": [
+        {
+          "id": "T-008",
+          "titulo": "Biblioteca compartilhada e contratos de telemetria",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "pyproject.toml",
+            "packages/observability/observability/__init__.py",
+            "packages/observability/observability/telemetry.py",
+            "packages/observability/observability/logging.py",
+            "packages/observability/tests/test_telemetry.py",
+            "packages/observability/tests/test_logging.py"
+          ],
+          "refs": [
+            "US-004",
+            "US-005",
+            "AC-014",
+            "AC-015",
+            "AC-016",
+            "AC-017",
+            "AC-018"
+          ]
+        },
+        {
+          "id": "T-009",
+          "titulo": "Instrumentação dos quatro microsserviços",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "packages/observability/observability/telemetry.py",
+            "services/order_service/order_service/main.py",
+            "services/order_service/order_service/api.py",
+            "services/order_service/order_service/producer.py",
+            "services/order_service/tests/test_observability.py",
+            "services/inventory_service/inventory_service/main.py",
+            "services/inventory_service/tests/test_observability.py",
+            "services/payment_service/payment_service/main.py",
+            "services/payment_service/tests/test_observability.py",
+            "services/notification_service/notification_service/main.py",
+            "services/notification_service/notification_service/consumer.py",
+            "services/notification_service/tests/test_observability.py"
+          ],
+          "refs": [
+            "US-004",
+            "US-005",
+            "AC-014",
+            "AC-015",
+            "AC-016",
+            "AC-017",
+            "AC-018"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-2",
+      "branch": "spec/observabilidade-faixa-2",
+      "worktree": "../onp-worktrees/bukhara-python-observabilidade-faixa-2",
+      "tarefas": [
+        {
+          "id": "T-010",
+          "titulo": "Stack LGTM e dashboard provisionado",
+          "modelo": "gpt-5.6-terra",
+          "esforco": "high",
+          "arquivos": [
+            "docker-compose.yml",
+            "Dockerfile",
+            ".env.example",
+            "observability/grafana/dashboards.yaml",
+            "observability/grafana/order-saga.json",
+            "tests/integration/test_observability_stack.py"
+          ],
+          "refs": [
+            "US-005",
+            "US-006",
+            "AC-017",
+            "AC-019",
+            "AC-020"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-3",
+      "branch": "spec/observabilidade-faixa-3",
+      "worktree": "../onp-worktrees/bukhara-python-observabilidade-faixa-3",
+      "tarefas": [
+        {
+          "id": "T-011",
+          "titulo": "Runbook de investigação",
+          "modelo": "gpt-5.6-luna",
+          "esforco": "low",
+          "arquivos": [
+            "README.md",
+            "docs/observability.md",
+            "tests/integration/test_observability_docs.py"
+          ],
+          "refs": [
+            "US-006",
+            "AC-020",
+            "AC-021"
+          ]
+        }
+      ]
+    }
+  ],
+  "sequenciais": [],
+  "concluidas": [],
+  "avisos": []
+}
