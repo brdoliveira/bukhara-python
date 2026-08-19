@@ -19,3 +19,5 @@ py -3.12 -B -m pytest -q -p no:cacheprovider
 ```
 
 Os testes anotados com `@spec:AC-008`, `@spec:AC-009` e `@spec:AC-012` são a prova executável dos procedimentos documentados.
+
+Para subir e investigar a observabilidade local, consulte o [runbook de observabilidade](docs/observability.md).
