@@ -23,7 +23,23 @@ dev = ["pytest>=8,<9", "pytest-cov>=5,<7"]
 
 [tool.pytest.ini_options]
 pythonpath = ["packages/event_bus", "packages/observability"]
-addopts = "-ra --import-mode=importlib --cov=services --cov=packages --cov-report=term-missing --cov-fail-under=85"
+addopts = "-ra --import-mode=importlib --cov --cov-report=term-missing --cov-fail-under=85"
+
+[tool.coverage.run]
+source = [
+    "packages/event_bus/event_bus",
+    "packages/observability/observability",
+    "services/order_service/order_service",
+    "services/inventory_service/inventory_service",
+    "services/payment_service/payment_service",
+    "services/notification_service/notification_service",
+]
+omit = ["*/tests/*", "*/migrations/*"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = true
 
 [tool.setuptools.packages.find]
 where = ["packages/event_bus", "packages/observability"]

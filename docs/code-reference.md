@@ -39,5 +39,6 @@ py -3.12 -m pip install -e ".[dev]"
 py -3.12 -B -m pytest -q -p no:cacheprovider
 ```
 
-O pytest-cov mede `services/` e `packages/` e bloqueia a suíte quando a
-cobertura global fica abaixo de 85%.
+O pytest-cov mede somente os seis diretórios de produção dos pacotes e
+serviços, excluindo testes e migrações. A suíte é bloqueada quando essa
+cobertura global de produção fica abaixo de 85%.

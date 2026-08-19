@@ -7,10 +7,16 @@ from pathlib import Path
 ROOT = Path(__file__).parents[2]
 
 
+def production_python_files() -> list[Path]:
+    """Return production modules, excluding tests and migration entry points."""
+    paths = sorted((ROOT / "services").rglob("*.py")) + sorted((ROOT / "packages").rglob("*.py"))
+    return [path for path in paths if "tests" not in path.parts and "migrations" not in path.parts]
+
+
 def test_apis_publicas_possuem_docstrings_verificaveis__spec_AC_024() -> None:
     """@spec:AC-024 Cada módulo e símbolo público de primeiro nível é documentado."""
     missing: list[str] = []
-    for path in sorted((ROOT / "services").rglob("*.py")) + sorted((ROOT / "packages").rglob("*.py")):
+    for path in production_python_files():
         tree = ast.parse(path.read_text(encoding="utf-8"))
         if ast.get_docstring(tree) is None:
             missing.append(f"{path}: módulo")
