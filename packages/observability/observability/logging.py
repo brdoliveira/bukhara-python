@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from typing import Any, Optional
 
 from opentelemetry import trace
@@ -42,7 +43,8 @@ def get_logger(name: str, *, service_name: str) -> StructuredLogger:
 
 def configure_logging(*, service_name: str, otlp_endpoint: Optional[str] = None, export_enabled: bool = True) -> None:
     """Conecta logs do ``logging`` ao exportador OTLP em lote quando habilitado."""
-    if not export_enabled:
+    resolved_endpoint = otlp_endpoint or os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
+    if not export_enabled or not resolved_endpoint:
         return
     try:
         from opentelemetry._logs import set_logger_provider
@@ -52,7 +54,7 @@ def configure_logging(*, service_name: str, otlp_endpoint: Optional[str] = None,
         from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 
         provider = LoggerProvider(resource=Resource.create({SERVICE_NAME: service_name}))
-        endpoint = (otlp_endpoint or "http://localhost:4318").rstrip("/") + "/v1/logs"
+        endpoint = resolved_endpoint.rstrip("/") + "/v1/logs"
         provider.add_log_record_processor(BatchLogRecordProcessor(OTLPLogExporter(endpoint=endpoint)))
         set_logger_provider(provider)
         root = logging.getLogger()

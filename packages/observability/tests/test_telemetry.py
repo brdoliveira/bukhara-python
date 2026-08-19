@@ -84,6 +84,16 @@ def test_falha_do_exportador_nao_interrompe_operacao_de_negocio__spec_AC_018() -
     assert effect == ["payment-approved"]
 
 
+def test_sem_endpoint_otlp_nao_cria_exportador_de_rede(monkeypatch) -> None:
+    monkeypatch.delenv("OTEL_EXPORTER_OTLP_ENDPOINT", raising=False)
+    settings = TelemetrySettings(service_name="order-service")
+
+    telemetry = configure_telemetry(settings)
+
+    assert settings.endpoint is None
+    assert telemetry.tracer_provider.force_flush(timeout_millis=10)
+
+
 class _RecordingInstrument:
     def __init__(self) -> None:
         self.calls: list[tuple[float | int, dict[str, object]]] = []

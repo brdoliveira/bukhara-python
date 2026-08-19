@@ -36,8 +36,10 @@ class TelemetrySettings:
     export_enabled: bool = True
 
     @property
-    def endpoint(self) -> str:
-        return self.otlp_endpoint or os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318")
+    def endpoint(self) -> Optional[str]:
+        # Sem endpoint explícito o SDK permanece local. Isso evita I/O de rede
+        # em testes e permite que a saga rode sem a stack de observabilidade.
+        return self.otlp_endpoint or os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
 
 
 class Telemetry:
@@ -186,20 +188,21 @@ def configure_telemetry(
     tracer_provider = TracerProvider(resource=resource)
     meter_provider = MeterProvider(resource=resource, metric_readers=[metric_reader] if metric_reader else [])
 
-    if settings.export_enabled:
+    endpoint = settings.endpoint
+    if settings.export_enabled and (endpoint or span_exporter is not None):
         try:
             if span_exporter is None:
                 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 
-                span_exporter = OTLPSpanExporter(endpoint=_trace_endpoint(settings.endpoint))
+                span_exporter = OTLPSpanExporter(endpoint=_trace_endpoint(endpoint))
             tracer_provider.add_span_processor(BatchSpanProcessor(span_exporter))
 
-            if metric_reader is None:
+            if metric_reader is None and endpoint:
                 from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
 
                 meter_provider = MeterProvider(
                     resource=resource,
-                    metric_readers=[PeriodicExportingMetricReader(OTLPMetricExporter(endpoint=_metric_endpoint(settings.endpoint)))],
+                    metric_readers=[PeriodicExportingMetricReader(OTLPMetricExporter(endpoint=_metric_endpoint(endpoint)))],
                 )
         except Exception:
             # Uma configuração OTLP inválida degrada para provedores locais vazios.
