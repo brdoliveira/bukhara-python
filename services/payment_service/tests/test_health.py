@@ -6,6 +6,26 @@ import pytest
 from services.payment_service.payment_service.main import DependencyProbe, create_app
 
 
+def test_apis_publicas_do_pagamento_possuem_docstrings__spec_AC_024():
+    """@spec:AC-024 Módulos, classes e funções públicas explicam sua responsabilidade."""
+    import ast
+    from pathlib import Path
+
+    source_dir = Path(__file__).parents[1] / "payment_service"
+    modules = ("consumer.py", "handler.py", "main.py", "outbox.py", "persistence.py")
+    undocumented: list[str] = []
+    for module_name in modules:
+        tree = ast.parse((source_dir / module_name).read_text(encoding="utf-8"))
+        if ast.get_docstring(tree) is None:
+            undocumented.append(module_name)
+        for node in tree.body:
+            if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)) and not node.name.startswith("_"):
+                if ast.get_docstring(node) is None:
+                    undocumented.append(f"{module_name}:{node.name}")
+
+    assert undocumented == []
+
+
 async def request(app, path):
     messages = []
 

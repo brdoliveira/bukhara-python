@@ -10,12 +10,15 @@ from .persistence import PaymentRepository
 
 
 class PaymentHandler:
+    """Decide pagamentos e produz eventos de aprovação ou compensação."""
+
     def __init__(self, adapter: PaymentAdapter, outbox: InMemoryOutbox, repository: PaymentRepository) -> None:
         self.adapter = adapter
         self.outbox = outbox
         self.repository = repository
 
     def handle(self, event: dict[str, Any]) -> list[dict[str, Any]]:
+        """Cobra uma reserva e cria os eventos que representam a decisão."""
         if event["type"] != "inventory.reserved":
             raise ValueError(f"unsupported event type: {event['type']}")
         try:

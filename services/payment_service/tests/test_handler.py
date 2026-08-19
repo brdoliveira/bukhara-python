@@ -46,3 +46,17 @@ def test_ac_007_recusa_definitiva_publica_falha_e_solicita_liberacao__spec_AC_00
         ("inventory.release.requested", "payment_declined"),
     ]
 
+
+def test_recusa_de_pagamento_emite_evento_e_compensacao__spec_AC_029():
+    """@spec:AC-029 Uma recusa definitiva preserva a decisão e libera o estoque."""
+    handler = PaymentHandler(
+        PaymentAdapter(charge_failures=[PaymentDeclinedError("declined")]),
+        InMemoryOutbox(),
+        PaymentRepository(),
+    )
+
+    emitted = handler.handle(reserved_event())
+
+    assert [event["type"] for event in emitted] == ["payment.failed", "inventory.release.requested"]
+    assert {event["causation_id"] for event in emitted} == {"evt-reserved"}
+

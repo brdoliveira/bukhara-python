@@ -18,16 +18,21 @@ SUPPORTED_EVENT_TYPES = {"inventory.reserved"}
 
 @dataclass(frozen=True)
 class ConsumerResult:
+    """Expõe o desfecho observável do processamento de um único evento."""
+
     status: str
 
 
 class PaymentConsumer:
+    """Aplica deduplicação, retry, DLQ e publicação para reservas recebidas."""
+
     def __init__(self, handler: PaymentHandler, repository: PaymentRepository, broker: InMemoryBroker) -> None:
         self.handler = handler
         self.repository = repository
         self.broker = broker
 
     def consume(self, event: dict[str, Any]) -> ConsumerResult:
+        """Processa uma reserva e confirma a mensagem conforme seu resultado."""
         event = self._normalize(event)
         errors = self._validate(event)
         event_id = event.get("event_id") if isinstance(event, dict) else None
