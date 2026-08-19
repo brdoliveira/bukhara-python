@@ -1,7 +1,7 @@
 # Spec: Observabilidade da saga distribuída
 
 > feature: observabilidade
-> status: pronta
+> status: auditada
 
 ## Contexto
 

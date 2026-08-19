@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "proximoId": 3,
+  "licoes": [
+    {
+      "id": "L-001",
+      "texto": "Configurar um reporter pytest granular no verify para vincular cada critério ao teste executado, em vez de depender apenas do exit code global.",
+      "chave": "PROVA_FRACA::configurar um reporter pytest granular no verify para vincular cada criterio ao teste executado em vez de depender apenas do exit code global",
+      "sinal": "PROVA_FRACA",
+      "escopo": null,
+      "status": "candidata",
+      "recorrencia": 1,
+      "features": [
+        "observabilidade"
+      ],
+      "evidencias": [
+        {
+          "fonte": "AC-014",
+          "feature": "observabilidade",
+          "quando": "2026-08-19T05:52:28.364Z",
+          "gitRev": "1191956"
+        }
+      ],
+      "penalidades": 0,
+      "criadaEm": "2026-08-19T05:52:28.364Z",
+      "ultimaVez": "2026-08-19T05:52:28.364Z"
+    },
+    {
+      "id": "L-002",
+      "texto": "Criar e anotar o teste @spec no mesmo lote da implementação de cada critério, antes da primeira auditoria.",
+      "chave": "AC_SEM_TESTE::criar e anotar o teste spec no mesmo lote da implementacao de cada criterio antes da primeira auditoria",
+      "sinal": "AC_SEM_TESTE",
+      "escopo": null,
+      "status": "candidata",
+      "recorrencia": 1,
+      "features": [
+        "observabilidade"
+      ],
+      "evidencias": [
+        {
+          "fonte": "AC-014",
+          "feature": "observabilidade",
+          "quando": "2026-08-19T05:52:28.464Z",
+          "gitRev": "612b979"
+        }
+      ],
+      "penalidades": 0,
+      "criadaEm": "2026-08-19T05:52:28.464Z",
+      "ultimaVez": "2026-08-19T05:52:28.464Z"
+    }
+  ]
+}
