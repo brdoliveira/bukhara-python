@@ -1,0 +1,52 @@
+{
+  "feature": "observabilidade",
+  "timestamp": "2026-08-19T01:16:46.473Z",
+  "gitRev": "09e390b",
+  "command": "py -3.12 -B -m pytest -q -p no:cacheprovider",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-014": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-015": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-016": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-017": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-018": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-019": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-020": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-021": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}
