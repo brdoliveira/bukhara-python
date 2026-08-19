@@ -32,6 +32,11 @@ def create_app(
     *,
     telemetry: Optional[Telemetry] = None,
 ) -> FastAPI:
+    """Cria a aplicação ASGI com telemetria, rotas e recuperação da Outbox.
+
+    Dependências podem ser injetadas para execução hermética; em runtime elas
+    são resolvidas a partir das configurações de ambiente.
+    """
     resolved_store = store or (OrderStore.from_environment() if os.getenv("DATABASE_URL") else OrderStore())
     resolved_telemetry = telemetry or configure_telemetry(TelemetrySettings(service_name="order-service"))
     configure_logging(service_name="order-service")

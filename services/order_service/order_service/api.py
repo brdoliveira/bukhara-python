@@ -12,6 +12,11 @@ from .persistence import OrderStore, StoredOrder
 
 
 def register_routes(app: FastAPI, store: OrderStore, producer: EventProducer) -> OutboxPublisher:
+    """Registra os endpoints HTTP e devolve o publicador da Outbox associado.
+
+    A criação de pedidos é idempotente: o pedido e seu evento são persistidos
+    antes de qualquer tentativa de publicação, permitindo recuperação posterior.
+    """
     publisher = OutboxPublisher(store, producer)
 
     @app.post("/orders", response_model=OrderAccepted, status_code=status.HTTP_202_ACCEPTED)

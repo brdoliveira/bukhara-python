@@ -41,6 +41,8 @@ outbox = Table(
 
 @dataclass(frozen=True)
 class StoredOrder:
+    """Agrupa os dados de um pedido antes de sua persistência transacional."""
+
     order_id: str
     correlation_id: str
     payload: dict[str, Any]
@@ -49,6 +51,8 @@ class StoredOrder:
 
 @dataclass(frozen=True)
 class OutboxEvent:
+    """Representa um evento de pedido que ainda pode precisar de publicação."""
+
     event_id: str
     order_id: str
     correlation_id: str
@@ -57,6 +61,7 @@ class OutboxEvent:
     created_at: datetime
 
     def message(self) -> dict[str, Any]:
+        """Serializa o evento no envelope esperado pelos consumidores Kafka."""
         return {
             "event_id": self.event_id,
             "event_type": "order.created",
@@ -73,6 +78,8 @@ class OutboxEvent:
 
 
 class OrderStore:
+    """Persiste pedidos idempotentes e eventos da Outbox na mesma transação."""
+
     def __init__(self, database_url: Optional[str] = None) -> None:
         database_url = database_url or os.getenv("DATABASE_URL", "sqlite+pysqlite:///:memory:")
         options: dict[str, Any] = {"future": True}
@@ -85,6 +92,7 @@ class OrderStore:
 
     @classmethod
     def from_environment(cls) -> "OrderStore":
+        """Cria o repositório usando a URL de banco obrigatória do runtime."""
         database_url = os.getenv("DATABASE_URL")
         if not database_url:
             raise RuntimeError("DATABASE_URL is required for the order-service runtime")
@@ -115,15 +123,18 @@ class OrderStore:
             return StoredOrder(row["order_id"], row["correlation_id"], json.loads(row["payload"]), event["event_id"]), False
 
     def pending_events(self) -> list[OutboxEvent]:
+        """Retorna os eventos que ainda não receberam confirmação de publicação."""
         with self.engine.connect() as connection:
             rows = connection.execute(select(outbox).where(outbox.c.published.is_(False)).order_by(outbox.c.created_at)).mappings()
             return [OutboxEvent(r["event_id"], r["order_id"], r["correlation_id"], r["topic"], json.loads(r["payload"]), r["created_at"]) for r in rows]
 
     def mark_published(self, event_id: str) -> None:
+        """Marca um evento como publicado somente após confirmação do produtor."""
         with self.engine.begin() as connection:
             connection.execute(outbox.update().where(outbox.c.event_id == event_id).values(published=True, published_at=datetime.now(UTC)))
 
     def is_available(self) -> bool:
+        """Informa se o banco aceita uma consulta simples de prontidão."""
         try:
             with self.engine.connect() as connection:
                 connection.execute(select(1))
@@ -132,4 +143,5 @@ class OrderStore:
             return False
 
     def close(self) -> None:
+        """Libera as conexões mantidas pelo repositório."""
         self.engine.dispose()
