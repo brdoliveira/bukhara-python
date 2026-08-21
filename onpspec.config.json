@@ -1,5 +1,5 @@
 {
-  "testCommand": "py -3.12 -B -m pytest -q -p no:cacheprovider",
+  "testCommand": "python -B -m pytest -q -p no:cacheprovider",
   "reporter": "exitcode",
   "testGlobs": [
     "test/**",
