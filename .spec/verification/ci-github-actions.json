@@ -1,18 +1,23 @@
 {
-  "feature": "documentacao-arquitetura",
-  "timestamp": "2026-08-21T02:45:22.483Z",
+  "feature": "ci-github-actions",
+  "timestamp": "2026-08-21T02:45:46.640Z",
   "gitRev": "1dd2cae",
   "command": "python -B -m pytest -q -p no:cacheprovider",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-022": {
+    "AC-032": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-023": {
+    "AC-033": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-034": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
